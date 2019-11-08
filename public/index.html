@@ -1,7 +1,137 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<link rel="stylesheet" href="style.css">
+<head>
+    <meta charset="utf-8">
+    
+    <!-- Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
 
-<div id="cy"></div>
+<body>
+    
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
+        <div class="mdl-layout__drawer">
+            <div class="media">
+                <img src="network.svg" class="w-25 p-3">
+                    <div class="media-body">
+                    <h5 class="mt-0"><br>Graph Theory</h5>
+                    Graphical Editor to draw custom graphs and visualize classic graph theory algorithms.
+                </div>
+            </div>
+            
+            <div id="accordion">
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#dfs" aria-expanded="false" aria-controls="dfs">
+                                Depth First Search
+                                <span class="badge badge-primary">search</span>
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="dfs" class="collapse" data-parent="#accordion">
+                        <div class="card-body">
+                            
+                        </div>
+                    </div>
+                </div>                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#bfs" aria-expanded="false" aria-controls="bfs">
+                                Breadth First Search
+                                <span class="badge badge-primary">search</span>
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="bfs" class="collapse" data-parent="#accordion">
+                        <div class="card-body">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#dijkstra" aria-expanded="false" aria-controls="dijkstra">
+                                Dijkstra
+                                <span class="badge badge-success">shortest path</span>
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="dijkstra" class="collapse" data-parent="#accordion">
+                        <div class="card-body">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#bellman" aria-expanded="false" aria-controls="bellman">
+                                Bellman-Ford
+                                <span class="badge badge-success">shortest path</span>
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="bellman" class="collapse" data-parent="#accordion">
+                        <div class="card-body">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#prim" aria-expanded="false" aria-controls="prim">
+                                Prim
+                                <span class="badge badge-warning">MST</span>
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="prim" class="collapse" data-parent="#accordion">
+                        <div class="card-body">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#kruskal" aria-expanded="false" aria-controls="kruskal">
+                                Kruskal
+                                <span class="badge badge-warning">MST</span>
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="kruskal" class="collapse" data-parent="#accordion">
+                        <div class="card-body">
+                            
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+        <main class="mdl-layout__content">
+            <div class="page-content">
+                <div id="cy"></div>
+            </div>
+        </main>
+    </div>   
+    
+</body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>
 <script src="script.js"></script>

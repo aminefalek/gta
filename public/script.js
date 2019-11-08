@@ -7,6 +7,32 @@ function render(elements) {
     
     cy.layout(options);
     
+    cy.on('click', function(e){
+        if (event.ctrlKey) {
+            if (selectedNodeCounter == 0) {
+                selectedTailNode = e.target.id();
+                selectedNodeCounter++;
+            }
+            else {
+                selectedHeadNodeNode = e.target.id();
+                selectedNodeCounter = 0;
+                
+                cy.add([
+                    { group:'edges', data: { id: selectedTailNode.toString() + selectedHeadNodeNode.toString(), cost: 1, source: selectedTailNode, target: selectedHeadNodeNode } }
+                ]);
+                
+            }
+        }
+        else {
+            console.log('normal mode');
+            selectedNodeCounter = 0;
+            cy.add([
+                { group:'nodes', data: { id: nodeId++ }, renderedPosition: e.renderedPosition }
+            ]);
+        }
+        
+    });
+    
     return cy;
 }
 
@@ -21,17 +47,18 @@ function addEdge(elements, tail, head, cost) {
 function drawGraph(graph) {
     var elements = [];
     
-    for (var i=0; i<graph.length; i++) {
-        addNode(elements, i);
-        for (var j=0; j<graph[i].length; j++) {
-            var head = graph[i][j][0];
-            var cost = graph[i][j][1];
+    for (nodeId=0; nodeId<graph.length; nodeId++) {
+        addNode(elements, nodeId);
+        for (var j=0; j<graph[nodeId].length; j++) {
+            var head = graph[nodeId][j][0];
+            var cost = graph[nodeId][j][1];
             
-            addEdge(elements, i, head, cost);
+            addEdge(elements, nodeId, head, cost);
         }
     }
     
-    render(elements);    
+    cy = render(elements);
+    return cy
 }
 
 async function sendGraphRequest(name) {
@@ -51,7 +78,10 @@ async function sendGraphRequest(name) {
 }
 
 var graph = sendGraphRequest('basic');
-
+var nodeId = 0;
+var selectedNodeCounter = 0;
+var selectedTailNode;
+var selectedHeadNode;
 
 var defaultStyle = [
     {
@@ -80,5 +110,6 @@ var defaultStyle = [
 let options = {
   name: 'cose',
   animate: false,
+  nodeSep: 20,
   idealEdgeLength: 10
 };

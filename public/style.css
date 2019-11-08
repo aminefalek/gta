@@ -1,5 +1,17 @@
+.mdl-layout__drawer {
+  width: 20%;
+}
+
+#accordion {
+    margin-top: 20px;
+    padding: 10px;
+}
+
 #cy {
-  width: 1200px;
-  height: 800px;
-  display: block;
+    margin-top: 10px;
+    margin-right: 10px; 
+    margin-left: 9%;
+    margin-bottom: 10px; 
+    height: 1000px;
+    display: block;
 }
