@@ -10,15 +10,17 @@ function render(elements) {
     cy.on('click', function(e){
         if (event.ctrlKey) {
             if (selectedNodeCounter == 0) {
-                selectedTailNode = e.target.id();
+                selectedTailNode = e.target;
+                selectedTailNode.style('border-color', 'red');
                 selectedNodeCounter++;
             }
             else {
-                selectedHeadNodeNode = e.target.id();
+                selectedTailNode.style('border-color', '#000');
+                selectedHeadNodeNode = e.target;
                 selectedNodeCounter = 0;
                 
                 cy.add([
-                    { group:'edges', data: { id: selectedTailNode.toString() + selectedHeadNodeNode.toString(), cost: 1, source: selectedTailNode, target: selectedHeadNodeNode } }
+                    { group:'edges', data: { id: selectedTailNode.id().toString() + selectedHeadNodeNode.id().toString(), cost: 1, source: selectedTailNode.id(), target: selectedHeadNodeNode.id() } }
                 ]);
                 
             }
@@ -87,7 +89,11 @@ var defaultStyle = [
     {
       selector: 'node',
       style: {
-        'background-color': '#000',
+        'width': '1.5em',
+        'height': '1.5em',
+        'border-width': 3,
+        'border-color': 'black',
+        'background-color': 'yellow',
         'label': 'data(id)'
       }
     },
