@@ -1,0 +1,23 @@
+{
+  "name": "graph-theory",
+  "version": "1.0.0",
+  "description": "web application to visualize graph theory algorithms",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aminefalek/graph-theory.git"
+  },
+  "author": "Amine M. Falek",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aminefalek/graph-theory/issues"
+  },
+  "homepage": "https://github.com/aminefalek/graph-theory#readme",
+  "dependencies": {
+    "cytoscape-spread": "^3.0.0",
+    "express": "^4.17.1"
+  }
+}
