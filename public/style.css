@@ -2,6 +2,33 @@
   width: 20%;
 }
 
+#graph_select {
+    margin-top: 30px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+#graph_edit {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+#dropdown {
+    margin-right: 5px;
+}
+
+#slider {
+    margin-top: 30px;
+    margin-right: 50px;
+    margin-left: 50px;
+}
+
+#control {
+    margin-top: 5px;
+    margin-right: 50px;
+    margin-left: 50px;
+}
+
 #accordion {
     margin-top: 20px;
     padding: 10px;

@@ -28,14 +28,65 @@
                 </div>
             </div>
             
+            <div id="graph_select">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Graph</label>
+                    </div>
+                    <select class="custom-select" id="dropdown">
+                        <option selected></option>
+                        <option value="1">Basic</option>
+                        <option value="2">Cycle</option>
+                        <option value="3">Negative Weights</option>
+                    </select>
+                    
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-secondary">load</button>
+                        <button type="button" class="btn btn-secondary">clear</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="graph_edit">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="graph name" aria-label="graph name" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button">save</button>
+                    </div>
+                </div>
+                <div class="custom-control custom-checkbox mr-sm-2">
+                    <input type="checkbox" class="custom-control-input" id="customControlAutosizing">
+                    <label class="custom-control-label" for="customControlAutosizing">Edit Mode</label>
+                </div>
+            </div>
+            
+            
+            <div id="slider">
+                <input type="range" class="custom-range" min="0" max="100">
+            </div>
+            <div id="control" class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="option1" autocomplete="off" > Pause
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="option2" autocomplete="off"> Run
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="option3" autocomplete="off"> Stop
+                </label>
+            </div>
+            
             <div id="accordion">
                 
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0">
+                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="dfs_radio">
+                                <input type="radio" id="dfs_radio" class="mdl-radio__button" name="options" value="1" checked>
+                            </label>
                             <button class="btn btn-link" data-toggle="collapse" data-target="#dfs" aria-expanded="false" aria-controls="dfs">
                                 Depth First Search
-                                <span class="badge badge-primary">search</span>
+                                <span class="badge badge-pill badge-primary">search</span>
                             </button>
                         </h5>
                     </div>
@@ -49,9 +100,12 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0">
+                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="bfs_radio">
+                                <input type="radio" id="bfs_radio" class="mdl-radio__button" name="options" value="1">
+                            </label>
                             <button class="btn btn-link" data-toggle="collapse" data-target="#bfs" aria-expanded="false" aria-controls="bfs">
                                 Breadth First Search
-                                <span class="badge badge-primary">search</span>
+                                <span class="badge badge-pill badge-primary">search</span>
                             </button>
                         </h5>
                     </div>
@@ -64,9 +118,12 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0">
+                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="dijkstra_radio">
+                                <input type="radio" id="dijkstra_radio" class="mdl-radio__button" name="options" value="1">
+                            </label>
                             <button class="btn btn-link" data-toggle="collapse" data-target="#dijkstra" aria-expanded="false" aria-controls="dijkstra">
                                 Dijkstra
-                                <span class="badge badge-success">shortest path</span>
+                                <span class="badge badge-pill badge-success">shortest path</span>
                             </button>
                         </h5>
                     </div>
@@ -79,9 +136,12 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0">
+                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="bellman_radio">
+                                <input type="radio" id="bellman_radio" class="mdl-radio__button" name="options" value="1">
+                            </label>
                             <button class="btn btn-link" data-toggle="collapse" data-target="#bellman" aria-expanded="false" aria-controls="bellman">
                                 Bellman-Ford
-                                <span class="badge badge-success">shortest path</span>
+                                <span class="badge badge-pill badge-success">shortest path</span>
                             </button>
                         </h5>
                     </div>
@@ -94,9 +154,12 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0">
+                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="prim_radio">
+                                <input type="radio" id="prim_radio" class="mdl-radio__button" name="options" value="1">
+                            </label>
                             <button class="btn btn-link" data-toggle="collapse" data-target="#prim" aria-expanded="false" aria-controls="prim">
                                 Prim
-                                <span class="badge badge-warning">MST</span>
+                                <span class="badge badge-pill badge-warning">MST</span>
                             </button>
                         </h5>
                     </div>
@@ -109,13 +172,34 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0">
+                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="kruskal_radio">
+                                <input type="radio" id="kruskal_radio" class="mdl-radio__button" name="options" value="1">
+                            </label>
                             <button class="btn btn-link" data-toggle="collapse" data-target="#kruskal" aria-expanded="false" aria-controls="kruskal">
                                 Kruskal
-                                <span class="badge badge-warning">MST</span>
+                                <span class="badge badge-pill badge-warning">MST</span>
                             </button>
                         </h5>
                     </div>
                     <div id="kruskal" class="collapse" data-parent="#accordion">
+                        <div class="card-body">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="kosaraju_radio">
+                                <input type="radio" id="kosaraju_radio" class="mdl-radio__button" name="options" value="1">
+                            </label>
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#kosaraju" aria-expanded="false" aria-controls="kosaraju">
+                                Kosaraju
+                                <span class="badge badge-pill badge-danger">connected component</span>
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="kosaraju" class="collapse" data-parent="#accordion">
                         <div class="card-body">
                             
                         </div>
