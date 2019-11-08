@@ -54,12 +54,46 @@
                         <button class="btn btn-outline-secondary" type="button">save</button>
                     </div>
                 </div>
-                <div class="custom-control custom-checkbox mr-sm-2">
-                    <input type="checkbox" class="custom-control-input" id="customControlAutosizing">
-                    <label class="custom-control-label" for="customControlAutosizing">Edit Mode</label>
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseEdges" aria-expanded="true" aria-controls="collapseOne">
+                        Edit Mode
+                    </button>
+                </h5>
+                <div class="collapse" id="collapseEdges">
+                    <div class="card card-body">
+                        <label><b>Add node:</b> left click</label>
+                        <label><b>Add edge:</b> ctrl + left click</label>
+                        <label><b>Delete:</b> shift + left click</label>
+                        <table class="table table-sm text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">tail</th>
+                                    <th scope="col">head</th>
+                                    <th scope="col">weight</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td><input class="col-xs-2" type="text" placeholder="6" style="width:100px"></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>2</td>
+                                    <td><input class="col-xs-2" type="text" placeholder="5" style="width:100px"></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>3</td>
+                                    <td><input class="col-xs-2" type="text" placeholder="2" style="width:100px"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn btn-link">update</button>
+                    </div>
                 </div>
-            </div>
-            
+            </div>         
             
             <div id="slider">
                 <input type="range" class="custom-range" min="0" max="100">
