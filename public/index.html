@@ -35,14 +35,11 @@
                     </div>
                     <select class="custom-select" id="dropdown">
                         <option selected></option>
-                        <option value="1">Basic</option>
-                        <option value="2">Cycle</option>
-                        <option value="3">Negative Weights</option>
                     </select>
                     
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-secondary">load</button>
-                        <button type="button" class="btn btn-secondary">clear</button>
+                        <button type="button" class="btn btn-secondary" onclick="loadGraph()">load</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearGraph()">clear</button>
                     </div>
                 </div>
             </div>
@@ -51,11 +48,11 @@
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="graph name" aria-label="graph name" aria-describedby="basic-addon2">
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button">save</button>
+                        <button class="btn btn-outline-secondary" type="button" onclick="runAlgorithm()">save</button>
                     </div>
                 </div>
                 <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseEdges" aria-expanded="true" aria-controls="collapseOne">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseEdges" aria-expanded="true" aria-controls="collapseOne" onclick="editMode()">
                         Edit Mode
                     </button>
                 </h5>
@@ -64,7 +61,7 @@
                         <label><b>Add node:</b> left click</label>
                         <label><b>Add edge:</b> ctrl + left click</label>
                         <label><b>Delete:</b> shift + left click</label>
-                        <table class="table table-sm text-center">
+                        <table class="table table-sm text-center" id="graph_table">
                             <thead>
                                 <tr>
                                     <th scope="col">tail</th>
@@ -73,24 +70,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>2</td>
-                                    <td><input class="col-xs-2" type="text" placeholder="6" style="width:100px"></td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>2</td>
-                                    <td><input class="col-xs-2" type="text" placeholder="5" style="width:100px"></td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>3</td>
-                                    <td><input class="col-xs-2" type="text" placeholder="2" style="width:100px"></td>
-                                </tr>
                             </tbody>
                         </table>
-                        <button type="button" class="btn btn-link">update</button>
+                        <button type="button" class="btn btn-link" onclick="updateGraphWeights()">update</button>
                     </div>
                 </div>
             </div>         
@@ -252,4 +234,4 @@
     
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>
-<script src="script.js"></script>
+<script type="module" src="script.js"></script>

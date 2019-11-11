@@ -10,9 +10,17 @@ app.use(express.json({ limit: '1mb' }));
 
 app.post('/api', (request, response) => {
     console.log(request.body);
-
-    var name  = request.body['name'];    
-    response.json(graphs[name]);
+    
+    var type = request.body['type'];
+    
+    if (type == 'graph') {
+        var name  = request.body['name'];    
+        response.json(graphs[name]);
+    }
+    
+    else if (type == 'graph_names') {
+        response.json(Object.keys(graphs));
+    }
 });
 
 
@@ -28,8 +36,8 @@ function loadGraphs() {
         var outstream = new stream;
         var rl = readline.createInterface(instream, outstream);
         
-        var graph = [];
-        var node = 0;
+        var graph = {};
+        var tail = 0;
 
         rl.on('line', function(line) {            
             var edges = line.split('\t');            
@@ -44,7 +52,7 @@ function loadGraphs() {
                 neighbours.push([head, cost]);                
             });
             
-            graph.push(neighbours);
+            graph[tail] = neighbours;
         });
         
         graphs[file.split('.')[0]] = graph;
