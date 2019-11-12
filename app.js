@@ -39,7 +39,7 @@ function loadGraphs() {
         var graph = {};
         var tail = 0;
 
-        rl.on('line', function(line) {            
+        rl.on('line', function(line) {
             var edges = line.split('\t');            
             var neighbours = [];
             
@@ -52,7 +52,7 @@ function loadGraphs() {
                 neighbours.push([head, cost]);                
             });
             
-            graph[tail] = neighbours;
+            graph[tail++] = neighbours;
         });
         
         graphs[file.split('.')[0]] = graph;

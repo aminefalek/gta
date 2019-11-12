@@ -1,34 +1,59 @@
-var animations = [];
+var cy;
+var duration;
+var currentAnimationId = 0;
 
-export function resetAnimations() {
-    animations = [];
+var animationsForward  = [];
+var animationsBackward = [];
+
+export function initializeAnimations(cy_, duration_) {
+    cy = cy_;
+    duration = duration_;
+    animationsForward  = [];
+    animationsBackward = [];
 }
 
-export function queueAnimation(cy, id) {
-    console.log("queued: ", id);
-    var animation = cy.$('#' + id).animation({
-                        style: {
-                            'background-color': 'yellow'
-                        }
-                    }, {
-                        duration: 1000,
-                        complete: function() {
-                        }
-                    });
-    
-    animations.push(animation);
+export function queueAnimation(animF, animB) {
+    animationsForward.push(animF);
+    animationsBackward.push(animB);
 }
 
-function playAnimation(i) {
-    console.log("animation: ", i);
-    if (i === animations.length) {
+export function play() {
+    if (currentAnimationId == animationsForward.length) {
         return;
     }
-    animations[i].play().promise().then(function () {
-        playAnimation(i+1)
+    console.log("animation: ", currentAnimationId);
+    animationsForward[currentAnimationId].play().promise().then(function () {
+        play(++currentAnimationId)
     });
 }
 
-export function animate() {
-    playAnimation(0);
+export function pause() {
+    for (var i=currentAnimationId; i<animationsForward.length; i++) {
+        animationsForward[i].pause();
+    }
+}
+
+export function stop() {
+    pause();
+    cy.nodes().style( { 'background-color' : 'black' });
+    cy.edges().style( { 'line-color' : '#ccc', 'target-arrow-color': '#ccc'});
+    currentAnimationId = 0;
+    animationsForward  = [];
+    animationsBackward = [];
+}
+
+export function stepForward() {
+    if (currentAnimationId == animationsForward.length) {
+        return;
+    }
+    pause();
+    animationsForward[currentAnimationId++].progress(0.99).apply();
+}
+
+export function stepBackward() {
+    if (currentAnimationId == 0) {
+        return;
+    }
+    pause();
+    animationsBackward[--currentAnimationId].progress(0).apply();
 }

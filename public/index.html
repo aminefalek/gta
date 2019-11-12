@@ -13,6 +13,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -78,18 +80,13 @@
             </div>         
             
             <div id="slider">
-                <input type="range" class="custom-range" min="0" max="100">
+                <input id="speed_slider" type="range" class="custom-range" min="200" max="2000" value="800" onchange="readAnimationDuration(this.value)">
             </div>
-            <div id="control" class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-secondary">
-                    <input type="radio" name="options" id="option1" autocomplete="off" > Pause
-                </label>
-                <label class="btn btn-secondary">
-                    <input type="radio" name="options" id="option2" autocomplete="off"> Run
-                </label>
-                <label class="btn btn-secondary">
-                    <input type="radio" name="options" id="option3" autocomplete="off"> Stop
-                </label>
+            <div id="control" class="btn-group">
+                <button id="back_button" class="btn btn-secondary" onclick="back()"><i class="fa fa-backward"></i></button>
+                <button id="play_button" class="btn btn-secondary" onclick="playAnimation()"><i class="fa fa-play"></i></button>
+                <button id="stop_button" class="btn btn-secondary" onclick="stopAnimation()"><i class="fa fa-stop"></i></button>
+                <button id="next_button" class="btn btn-secondary" onclick="step()"><i class="fa fa-forward"></i></button>
             </div>
             
             <div id="accordion">

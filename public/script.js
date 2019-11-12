@@ -1,5 +1,5 @@
-import { resetAnimations, queueAnimation, animate } from './animation.js';
-import { initializeDFS, DFS } from './algorithms.js';
+import { play, pause, stop, stepForward, stepBackward } from './animation.js';
+import { initialize, DFS } from './algorithms/dfs.js';
 
 /*------------------------------ Style ------------------------------*/
 
@@ -122,20 +122,20 @@ function render(elements) {
             
             // background click
             if(target === cy){
-                try {
+                if (selectedNodeCounter > 0) {
                     selectedTailNode.style('background-color', 'black');
                 }
-                catch (error) {
-                    
+                
+                else {
+                    cy.add([
+                    { group:'nodes', data: { id: nodeId }, renderedPosition: cyEvent.renderedPosition }
+                    ]);
+
+                    // add node to graph
+                    graph[nodeId] = [];
+                    nodeId++;
                 }
                 selectedNodeCounter = 0;
-                cy.add([
-                    { group:'nodes', data: { id: nodeId }, renderedPosition: cyEvent.renderedPosition }
-                ]);
-                
-                // add node to graph
-                graph[nodeId] = [];
-                nodeId++;
             }
             
             // element click (node or edge)
@@ -165,6 +165,10 @@ function render(elements) {
                 
                 // Removing an element (node or edge)
                 if (event.shiftKey) {
+                    if (selectedNodeCounter > 0) {
+                        selectedTailNode.style('background-color', 'black');
+                        selectedNodeCounter = 0;
+                    }
                     cy.remove(cy.$('#' + target.id()));
                     generateTable();
                     updateGraph();
@@ -185,7 +189,7 @@ function drawGraph() {
             var cost = neighbour[1];
             
             elements.push({group:'edges', data: { source: tail, target: head, cost: cost }});
-            addRow(nodeId, head, cost);
+            addRow(tail, head, cost);
         });
     });
     
@@ -245,19 +249,53 @@ window.loadGraph = function loadGraph() {
 window.clearGraph = function clearGraph() {
     cy.elements().remove();
     graph = {};
+    resetTable();
     nodeId = 0;
 }
 
 window.editMode = function editMode() {
     isEditMode = !isEditMode;
-    console.log(isEditMode);
 }
 
-window.runAlgorithm = function runAlgorithm() {
-    resetAnimations();
-    initializeDFS(graph, cy);
+function runAlgorithm(id) {
+    initialize(graph, cy, animationDuration)
     DFS(0, []);
-    animate();
+}
+
+window.readAnimationDuration = function readAnimationDuration(value) {
+    animationDuration = value;
+}
+
+window.step = function step() {
+    stepForward();
+}
+
+window.back = function back() {
+    stepBackward();
+}
+
+window.stopAnimation = function stopAnimation() {
+    playButton.firstChild.classList.remove('fa-pause');
+    playButton.firstChild.classList.add('fa-play');
+    stop();
+    isAnimMode = false;
+}
+
+window.playAnimation = function playAnimation() {
+    isAnimMode = !isAnimMode;
+    
+    if (isAnimMode) {
+        playButton.firstChild.classList.remove('fa-play');
+        playButton.firstChild.classList.add('fa-pause');
+        runAlgorithm(0);
+        play();
+    }
+    else {
+        playButton.firstChild.classList.remove('fa-pause');
+        playButton.firstChild.classList.add('fa-play');
+        pause();
+    }
+    
 }
 
 /*------------------------------ Main ------------------------------*/
@@ -265,11 +303,16 @@ window.runAlgorithm = function runAlgorithm() {
 var graph = {};
 var cy;
 var isEditMode = false;
+var isAnimMode = false;
 var nodeId = 0;
 var selectedNodeCounter = 0;
 var selectedTailNode;
 var selectedHeadNode;
+var animationDuration = document.getElementById("speed_slider").value;
 var table = document.getElementById("graph_table");
+var playButton = document.getElementById("play_button");
+var backButton = document.getElementById("back_button");
+var nextButton = document.getElementById("next_button");
 
 sendGraphNamesRequest();
 render([]);
