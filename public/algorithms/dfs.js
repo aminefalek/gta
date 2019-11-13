@@ -1,13 +1,11 @@
-import { initializeAnimations, queueAnimation } from '../animation.js';
+import { initializeAnimations, queueAnimation, highlightNode, highlightEdge } from '../animation.js';
 
 var graph, cy;
-var duration;
 
-export function initialize(graph_, cy_, duration_) {
-    initializeAnimations(cy_, duration_);
+export function initializeDFS(graph_, cy_) {
+    initializeAnimations(cy_);
     graph = graph_;
     cy = cy_;
-    duration = duration_;
 }
 
 export function DFS(root, visited) {
@@ -15,30 +13,19 @@ export function DFS(root, visited) {
         return;
     }
     
-    addAnimation(root);
+    console.log(visited);
+    
+    highlightNode(root, 'red');
     visited.push(root);
     var neighbours = graph[root];
     
     neighbours.forEach(function(neighbour) {
-        var head = neighbour[0];
+        var head   = neighbour[0];
+        
+        if (!visited.includes(head)) {
+            highlightEdge(root, head, 'red');
+        }
+        
         DFS(head, visited);
     });
-}
-
-function addAnimation(id) {
-    var animF = cy.$('#' + id).animation({
-                        style: {
-                            'background-color': 'yellow'
-                        }
-                    }, {
-                        duration: duration,
-                    });
-    
-    var animB = cy.$('#' + id).animation({
-                        style: {
-                            'background-color': 'black'
-                        }
-                    });
-    
-    queueAnimation(animF, animB);
 }

@@ -1,5 +1,6 @@
 import { play, pause, stop, stepForward, stepBackward } from './animation.js';
-import { initialize, DFS } from './algorithms/dfs.js';
+import { initializeDFS, DFS } from './algorithms/dfs.js';
+import { initializeBFS, BFS } from './algorithms/bfs.js';
 
 /*------------------------------ Style ------------------------------*/
 
@@ -185,8 +186,8 @@ function drawGraph() {
     Object.keys(graph).forEach(function(tail) {
         elements.push({group:'nodes', data: { id: tail }});
         graph[tail].forEach(function(neighbour) {
-            var head = neighbour[0];
-            var cost = neighbour[1];
+            var head   = neighbour[0];
+            var cost   = neighbour[1];
             
             elements.push({group:'edges', data: { source: tail, target: head, cost: cost }});
             addRow(tail, head, cost);
@@ -237,6 +238,8 @@ async function sendGraphNamesRequest() {
         option.text = name;
         dropdown.add(option);
     });
+    
+    dropdown.value = graphNames[0];
 }
 
 window.loadGraph = function loadGraph() {
@@ -258,12 +261,8 @@ window.editMode = function editMode() {
 }
 
 function runAlgorithm(id) {
-    initialize(graph, cy, animationDuration)
-    DFS(0, []);
-}
-
-window.readAnimationDuration = function readAnimationDuration(value) {
-    animationDuration = value;
+    initializeBFS(graph, cy)
+    BFS('0');
 }
 
 window.step = function step() {
@@ -275,16 +274,17 @@ window.back = function back() {
 }
 
 window.stopAnimation = function stopAnimation() {
+    isPlay = false;
     playButton.firstChild.classList.remove('fa-pause');
     playButton.firstChild.classList.add('fa-play');
     stop();
-    isAnimMode = false;
 }
 
 window.playAnimation = function playAnimation() {
-    isAnimMode = !isAnimMode;
+    isAnimMode = true;
+    isPlay = !isPlay;
     
-    if (isAnimMode) {
+    if (isPlay) {
         playButton.firstChild.classList.remove('fa-play');
         playButton.firstChild.classList.add('fa-pause');
         runAlgorithm(0);
@@ -304,11 +304,11 @@ var graph = {};
 var cy;
 var isEditMode = false;
 var isAnimMode = false;
+var isPlay     = false;
 var nodeId = 0;
 var selectedNodeCounter = 0;
 var selectedTailNode;
 var selectedHeadNode;
-var animationDuration = document.getElementById("speed_slider").value;
 var table = document.getElementById("graph_table");
 var playButton = document.getElementById("play_button");
 var backButton = document.getElementById("back_button");
