@@ -1,14 +1,6 @@
-import { initializeAnimations, queueAnimation, highlightNode, highlightEdge } from '../animation.js';
+import { queueAnimation, highlightNode, highlightEdge } from '../animation.js';
 
-var graph, cy;
-
-export function initializeDFS(graph_, cy_) {
-    initializeAnimations(cy_);
-    graph = graph_;
-    cy = cy_;
-}
-
-export function dfs(root, visited) {
+export function dfs(graph, cy, root, visited) {
     if (visited.includes(root)) {
         return;
     }
@@ -26,6 +18,6 @@ export function dfs(root, visited) {
             highlightEdge(root, head, 'red');
         }
         
-        dfs(head, visited);
+        dfs(graph, cy, head, visited);
     });
 }

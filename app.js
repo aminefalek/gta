@@ -46,6 +46,7 @@ function loadGraphs() {
     
     var path = 'graphs/';
     var files  = fs.readdirSync(path);
+    var name;
     
     files.forEach(file => {
         var instream = fs.createReadStream(path + file);
@@ -72,10 +73,11 @@ function loadGraphs() {
             graph[tail++] = neighbours;
         });
         
-        graphs[file.split('.')[0]] = graph;
+        name = file.split('.')[0];
+        graphs[name] = graph;
 
         rl.on('close', function() {
-            console.log("Graphs ready..");
+            console.log("Graph " + name + " ready..");
         });
     });
     

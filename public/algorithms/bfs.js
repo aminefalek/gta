@@ -1,12 +1,4 @@
-import { initializeAnimations, queueAnimation, highlightNode, highlightEdge } from '../animation.js';
-
-var graph, cy;
-
-export function initializeBFS(graph_, cy_) {
-    initializeAnimations(cy_);
-    graph = graph_;
-    cy = cy_;
-}
+import { queueAnimation, highlightNode, highlightEdge } from '../animation.js';
 
 function enqueue(queue, element) {
     queue.push(element);
@@ -18,7 +10,7 @@ function dequeue(queue) {
     return head;
 }
 
-export function bfs(root) {
+export function bfs(graph, cy, root) {
     
     var visited = [];
     var queue = [root];

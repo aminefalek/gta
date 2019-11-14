@@ -1,12 +1,4 @@
-import { initializeAnimations, queueAnimation, highlightNode, highlightEdge } from '../animation.js';
-
-var graph, cy;
-
-export function initializeDijkstra(graph_, cy_) {
-    initializeAnimations(cy_);
-    graph = graph_;
-    cy = cy_;
-}
+import { queueAnimation, highlightNode, highlightEdge } from '../animation.js';
 
 function getMinimulDistance(distance, settled) {
     var node = null;
@@ -22,7 +14,7 @@ function getMinimulDistance(distance, settled) {
     return node;
 }
 
-export function dijkstra(source) {
+export function dijkstra(graph, cy, source) {
     var distance = [];
     var settled = [];
     var parent   = [];

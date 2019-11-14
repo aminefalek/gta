@@ -1,7 +1,7 @@
-import { play, pause, stop, stepForward, stepBackward } from './animation.js';
-import { initializeDFS, dfs } from './algorithms/dfs.js';
-import { initializeBFS, bfs } from './algorithms/bfs.js';
-import { initializeDijkstra, dijkstra } from './algorithms/dijkstra.js';
+import { initializeAnimations, play, pause, stop, stepForward, stepBackward } from './animation.js';
+import { dfs } from './algorithms/dfs.js';
+import { bfs } from './algorithms/bfs.js';
+import { dijkstra } from './algorithms/dijkstra.js';
 
 /*------------------------------ Style ------------------------------*/
 
@@ -276,9 +276,14 @@ window.editMode = function editMode() {
     isEditMode = !isEditMode;
 }
 
-function runAlgorithm(id) {
-    initializeDijkstra(graph, cy)
-    dijkstra('0');
+function runAlgorithm() {
+    initializeAnimations(cy);
+    
+    var algorithm = $('input[name=options]:checked').val();
+    
+    if      (algorithm == 0) dfs(graph, cy, '0', []);
+    else if (algorithm == 1) bfs(graph, cy, '0');
+    else if (algorithm == 2) dijkstra(graph, cy, '0');
 }
 
 window.step = function step() {
@@ -303,7 +308,7 @@ window.playAnimation = function playAnimation() {
     if (isPlay) {
         playButton.firstChild.classList.remove('fa-play');
         playButton.firstChild.classList.add('fa-pause');
-        runAlgorithm(0);
+        runAlgorithm();
         play();
     }
     else {
