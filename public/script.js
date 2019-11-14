@@ -1,6 +1,7 @@
 import { play, pause, stop, stepForward, stepBackward } from './animation.js';
-import { initializeDFS, DFS } from './algorithms/dfs.js';
-import { initializeBFS, BFS } from './algorithms/bfs.js';
+import { initializeDFS, dfs } from './algorithms/dfs.js';
+import { initializeBFS, bfs } from './algorithms/bfs.js';
+import { initializeDijkstra, dijkstra } from './algorithms/dijkstra.js';
 
 /*------------------------------ Style ------------------------------*/
 
@@ -242,6 +243,21 @@ async function sendGraphNamesRequest() {
     dropdown.value = graphNames[0];
 }
 
+async function saveGraph() {
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({'type':'save', 'name': document.getElementById("save_input").value, 'data': graph})
+    };
+    
+    const response = await fetch('/api', options);
+    var done = await response.json();
+    
+    sendGraphNamesRequest();
+}
+
 window.loadGraph = function loadGraph() {
     var dropdown = document.getElementById("dropdown");
     var graphName = dropdown.options[dropdown.selectedIndex].text;
@@ -261,8 +277,8 @@ window.editMode = function editMode() {
 }
 
 function runAlgorithm(id) {
-    initializeBFS(graph, cy)
-    BFS('0');
+    initializeDijkstra(graph, cy)
+    dijkstra('0');
 }
 
 window.step = function step() {

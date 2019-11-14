@@ -10,8 +10,6 @@ export function initializeAnimations(cy_) {
     cy = cy_;
     animationsForward  = [];
     animationsBackward = [];
-    
-    console.log("anims: ", animationsForward);
 }
 
 export function queueAnimation(animF, animB) {
@@ -40,7 +38,6 @@ export function pause() {
 }
 
 export function stop() {
-    console.log('anim id: ', currentAnimationId);
     animationsForward[currentAnimationId].stop();
     cy.nodes().style( { 'background-color' : 'black' });
     cy.edges().style( { 'line-color' : '#ccc', 'target-arrow-color': '#ccc'});

@@ -21,8 +21,25 @@ app.post('/api', (request, response) => {
     else if (type == 'graph_names') {
         response.json(Object.keys(graphs));
     }
+    
+    else if (type == 'save') {
+        var name  = request.body['name'];
+        var graph = request.body['data'];
+        
+        graphs[name] = data;
+        saveGraph(name, graph);
+    }
 });
 
+function saveGraph(name, graph) {
+    var path = 'graphs/';
+    var fs = require('fs')
+    var file = fs.createWriteStream(path + name + '.txt', {flags: 'w'});
+
+    flags.write('some data') // append string to your file
+    flags.write('more data') // again
+    flags.write('and more') // again
+}
 
 function loadGraphs() {
     var graphs = {};

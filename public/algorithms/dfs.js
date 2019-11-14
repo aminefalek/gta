@@ -8,7 +8,7 @@ export function initializeDFS(graph_, cy_) {
     cy = cy_;
 }
 
-export function DFS(root, visited) {
+export function dfs(root, visited) {
     if (visited.includes(root)) {
         return;
     }
@@ -26,6 +26,6 @@ export function DFS(root, visited) {
             highlightEdge(root, head, 'red');
         }
         
-        DFS(head, visited);
+        dfs(head, visited);
     });
 }

@@ -18,7 +18,7 @@ function dequeue(queue) {
     return head;
 }
 
-export function BFS(root) {
+export function bfs(root) {
     
     var visited = [];
     var queue = [root];
