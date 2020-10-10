@@ -334,6 +334,7 @@ var table = document.getElementById("graph_table");
 var playButton = document.getElementById("play_button");
 var backButton = document.getElementById("back_button");
 var nextButton = document.getElementById("next_button");
+var myCodeMirror = CodeMirror(document.getElementById("cm"));
 
 sendGraphNamesRequest();
 render([]);

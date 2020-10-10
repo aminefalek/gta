@@ -16,10 +16,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
     <link rel="stylesheet" href="style.css">
+    <!-- CODEMIRROR -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.css"> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/mode/python/python.min.js"></script>
+
+
 </head>
 
-<body>
-    
+<body> 
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
         <div class="mdl-layout__drawer">
             <div class="media">
@@ -222,6 +227,10 @@
         <main class="mdl-layout__content">
             <div class="page-content">
                 <div id="cy"></div>
+            </div>
+        </main>
+        <main class="mdl-layout__content">
+            <div id="cm">               
             </div>
         </main>
     </div>   
