@@ -34,11 +34,20 @@
     padding: 10px;
 }
 
-#cy {
+/* #cy {
     margin-top: 10px;
     margin-right: 10px; 
     margin-left: 9%;
     margin-bottom: 10px; 
     height: 1000px;
     display: block;
-}
+} */
+
+#cy {
+    height: 100%;
+    width: 90%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    float: right;
+  }
