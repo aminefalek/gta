@@ -13,6 +13,7 @@ function builtinRead(x) {
 
 export function custom(graph, cy, root) {
     var prog = document.getElementById("cm").value; 
+    
     var mypre = document.getElementById("output"); 
     
     Sk.pre = "output";

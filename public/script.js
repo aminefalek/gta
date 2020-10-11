@@ -181,6 +181,7 @@ function render(elements) {
     });
 }
 
+
 function drawGraph() {
     var elements = [];
     resetTable();
@@ -322,40 +323,8 @@ window.playAnimation = function playAnimation() {
 }
 
 
-function outf(text) { 
-    var mypre = document.getElementById("output"); 
-    mypre.innerHTML = mypre.innerHTML + text + "\nExecution done"; 
-} 
 
-function builtinRead(x) {
-    if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
-            throw "File not found: '" + x + "'";
-    return Sk.builtinFiles["files"][x];
-}
-
-function custom() {
-    var prog = myCodeMirror.getValue(); 
-    var mypre = document.getElementById("output"); 
-    mypre.innerHTML = 'Running...\n'; 
-    Sk.pre = "output";
-    console.log(prog)
-    Sk.configure({output:outf, read:builtinRead}); 
-
-    var myPromise = Sk.misceval.asyncToPromise(function() {
-        return Sk.importMainWithBody("<stdin>", false, prog, true);
-    });
-
-    myPromise.then(function(mod) {
-        console.log('success');
-    },
-        function(err) {
-        console.log(err.toString());
-    });
-    
-}
-
-
-/*------------------------------ Main ------------------------------*/
+    /*------------------------------ Main ------------------------------*/
 
 var graph = {};
 var cy;
