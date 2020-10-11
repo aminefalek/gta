@@ -42,21 +42,47 @@
     height: 1000px;
     display: block;
 } */
-
-#cy {
-    height: 100%;
-    width: 90%;
-    position: absolute;
-    right: 0;
-    top: 0;
-    float: right;
+.gutter {
+    cursor: s-resize;
+    height:15px;
+    background: rgb(39, 111, 243);
   }
 
-#cm {
-    height: 100%;
-    width: 60%;
-    position: absolute;
+#cy {
+    margin-left: 20%;
+    /* height: 100%;*/
+    width: 80%; 
+    /* position: absolute;
     right: 0;
     top: 0;
-    float: right;
+    float: right; */
+  }
+
+.CodeMirror * {
+    font-size: 20px;
+}
+
+#cm {
+    margin-left: 20%;
+    /* width: 50%; */
+    margin-right: 0px;
+    margin-bottom: 0px;
+    /* position: absolute;
+    right: 0;
+    top: 0;
+    float: right; */
+}
+
+#outputc{
+    margin-left: 20%;
+}
+
+#output {
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    float: none;
+    font-size: 20px;
+    background-color: black;
+    color: white
 }

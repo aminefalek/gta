@@ -2,6 +2,7 @@ import { initializeAnimations, play, pause, stop, stepForward, stepBackward } fr
 import { dfs } from './algorithms/dfs.js';
 import { bfs } from './algorithms/bfs.js';
 import { dijkstra } from './algorithms/dijkstra.js';
+// import { custom } from './algorithms/custom.js';
 
 /*------------------------------ Style ------------------------------*/
 
@@ -284,6 +285,7 @@ function runAlgorithm() {
     if      (algorithm == 0) dfs(graph, cy, '0', []);
     else if (algorithm == 1) bfs(graph, cy, '0');
     else if (algorithm == 2) dijkstra(graph, cy, '0');
+    else if (algorithm == 7) custom(graph, cy, '0');
 }
 
 window.step = function step() {
@@ -319,6 +321,40 @@ window.playAnimation = function playAnimation() {
     
 }
 
+
+function outf(text) { 
+    var mypre = document.getElementById("output"); 
+    mypre.innerHTML = mypre.innerHTML + text + "\nExecution done"; 
+} 
+
+function builtinRead(x) {
+    if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+            throw "File not found: '" + x + "'";
+    return Sk.builtinFiles["files"][x];
+}
+
+function custom() {
+    var prog = myCodeMirror.getValue(); 
+    var mypre = document.getElementById("output"); 
+    mypre.innerHTML = 'Running...\n'; 
+    Sk.pre = "output";
+    console.log(prog)
+    Sk.configure({output:outf, read:builtinRead}); 
+
+    var myPromise = Sk.misceval.asyncToPromise(function() {
+        return Sk.importMainWithBody("<stdin>", false, prog, true);
+    });
+
+    myPromise.then(function(mod) {
+        console.log('success');
+    },
+        function(err) {
+        console.log(err.toString());
+    });
+    
+}
+
+
 /*------------------------------ Main ------------------------------*/
 
 var graph = {};
@@ -334,7 +370,20 @@ var table = document.getElementById("graph_table");
 var playButton = document.getElementById("play_button");
 var backButton = document.getElementById("back_button");
 var nextButton = document.getElementById("next_button");
-var myCodeMirror = CodeMirror(document.getElementById("cm"));
+var myCodeMirror = CodeMirror(document.getElementById("cm"),{
+    value:"def example():\n\tprint(\"Hello, world!\")\n\nexample()",
+    mode: "python",
+    theme: "mbo",
+    lineNumbers:true
 
+});
+
+myCodeMirror.setSize("100%", "100%");
+
+Split(["#cy", "#cm", "#outputc"], {
+    gutterSize: 5,
+    sizes: [60,30,10],
+    direction: "vertical"
+});
 sendGraphNamesRequest();
 render([]);
