@@ -1,319 +1,171 @@
-<!DOCTYPE html>
-<head>
-    <meta charset="utf-8">
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>GTA</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
+        <!-- Main Stylesheet-->
+        <link rel="stylesheet" href="style.css">
 
-    <script type="text/javascript"
-    src="https://cdn.jsdelivr.net/npm/brython@3.8.10/brython.min.js">
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>
-<script type="module" src="script.js"></script>
-    
-    <!-- Material Design Lite -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    
-    <!-- Bootstrap 4 -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-    <link rel="stylesheet" href="style.css">
-    <!-- CODEMIRROR -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.css"> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/mode/python/python.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/theme/mbo.min.css">
+        <!-- Bootstrap 4 -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
-     <!-- SPLIT -->
-    <script src="https://unpkg.com/split.js/dist/split.min.js"></script>
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">		
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        <!-- CODEMIRROR -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/theme/monokai.min.css"> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/mode/python/python.min.js"></script>
 
-    <!-- PYTHON
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" type="text/javascript"></script> 
-    <script src="http://www.skulpt.org/js/skulpt.min.js" type="text/javascript"></script> 
-    <script src="http://www.skulpt.org/js/skulpt-stdlib.js" type="text/javascript"></script>  -->
+        <!-- SPLIT -->
+        <script src="https://unpkg.com/split.js/dist/split.min.js"></script>
 
-</head>
+        <!-- BRYTHON -->
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.0/brython.min.js"></script>
+    </head>
 
-<body onload="brython()"> 
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
-        <div class="mdl-layout__drawer">
-            <div class="media">
-                <img src="network.svg" class="w-25 p-3">
-                    <div class="media-body">
-                    <h5 class="mt-0"><br>Graph Theory</h5>
-                    Graphical Editor to draw custom graphs and visualize classic graph theory algorithms.
-                </div>
-            </div>
-            
-            <div id="graph_select">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputGroupSelect01">Graph</label>
-                    </div>
-                    <select class="custom-select" id="dropdown">
-                        <option selected></option>
-                    </select>
-                    
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-secondary" onclick="loadGraph()">load</button>
-                        <button type="button" class="btn btn-secondary" onclick="clearGraph()">clear</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="graph_edit">
-                <div class="input-group mb-3">
-                    <input id="save_input" type="text" class="form-control" placeholder="graph name" aria-label="graph name" aria-describedby="basic-addon2">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button" onclick="">save</button>
-                    </div>
-                </div>
-                <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseEdges" aria-expanded="true" aria-controls="collapseOne" onclick="editMode()">
-                        Edit Mode
+    <body onload="brython()"> 
+        <div class="wrapper d-flex align-items-stretch">
+            <nav id="sidebar-left">
+                <div class="custom-menu">
+                    <button type="button" id="collapse-left" class="btnc btnc-primary">
+                        <i class="fa fa-terminal"></i>
                     </button>
-                </h5>
-                <div class="collapse" id="collapseEdges">
-                    <div class="card card-body">
-                        <label><b>Add node:</b> left click</label>
-                        <label><b>Add edge:</b> ctrl + left click</label>
-                        <label><b>Delete:</b> shift + left click</label>
-                        <table class="table table-sm text-center" id="graph_table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">tail</th>
-                                    <th scope="col">head</th>
-                                    <th scope="col">weight</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                        <button type="button" class="btn btn-link" onclick="updateGraphWeights()">update</button>
-                    </div>
                 </div>
-            </div>         
-            
-            <div id="control" class="btn-group">
-                <button id="back_button" class="btn btn-secondary" onclick="back()"><i class="fa fa-backward"></i></button>
-                <button id="play_button" class="btn btn-secondary" onclick="playAnimation()"><i class="fa fa-play"></i></button>
-                <button id="stop_button" class="btn btn-secondary" onclick="stopAnimation()"><i class="fa fa-stop"></i></button>
-                <button id="next_button" class="btn btn-secondary" onclick="step()"><i class="fa fa-forward"></i></button>
+            </nav>
+
+            <div id="content">
             </div>
-            <input type="button" id="run_button" value="RUN" />
-            <script type="text/python"  id="script10">
-				from browser import document, alert, window
 
-				def convert(og_txt):
-					hl_dict = {}
-					converted_script = ""
-					for i,l in enumerate(og_txt.split("\n")):
-						hl_dict[i] = l
+            <nav id="sidebar-right">
+                <div class="custom-menu">
+                    <button type="button" id="collapse-right" class="btnc btnc-primary">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
 
-					converted_script += ("hl_dict = {\n")
-					all_keys = list(hl_dict.keys())
-					for k in all_keys:
-						converted_script += ("{} : \"{}\"".format(k, hl_dict[k].strip('\n').replace("\"", "\\\"")))
-						if k != all_keys[-1]:
-							converted_script += (",\n")
-					converted_script += ("}\n")
+                <div id="menu">
 
-					for i,l in enumerate(og_txt.split("\n")):
-						header = ""
-						for c in hl_dict[i]:
-							if c == '\t': header += "\t"
-							if c == " ": header += " "
-							else: break
-						converted_script += header+("document[\"output\"].innerHTML+=(\"Executing:\" + hl_dict[{}])\n".format(i))
-						converted_script += header+ "document[\"output\"].innerHTML += \"\\n\" \n"
-						if "change_button" in l :
-							converted_script += header+("document[\"run_button\"].value = \"HAHAHAHA\"" + "\n")
-						else:
-							converted_script += (l+"\n")
-					
-					return converted_script
+                    <div id="graph_select">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Graph</span>
+                            </div>
+                            <select class="custom-select" id="dropdown">
+                                <option selected></option>
+                            </select>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="loadGraph()">load</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="clearGraph()">clear</button>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div id="graph_edit">
+                        <div class="input-group input-group-sm mb-3">
+                            <input id="save_input" type="text" class="form-control" placeholder="graph name" aria-label="graph name" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" onclick="">save</button>
+                            </div>
+                        </div>
+                        <h5 class="mb-0">
+                            <button class="btn btn-link btn-sm" data-toggle="collapse" data-target="#collapseEdges" aria-expanded="true" aria-controls="collapseOne" onclick="editMode()">Edit Mode</button>
+                        </h5>
+                        <div class="collapse" id="collapseEdges">
+                            <div class="card card-body">
+                                <label><b>Add node:</b> left click</label>
+                                <label><b>Add edge:</b> ctrl + left click</label>
+                                <label><b>Delete:</b> shift + left click</label>
+                                <table class="table table-sm text-center" id="graph_table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">tail</th>
+                                            <th scope="col">head</th>
+                                            <th scope="col">weight</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <button type="button" class="btn btn-link btn-sm" onclick="updateGraphWeights()">update</button>
+                            </div>
+                        </div>
+                    </div>
 
-				def callScript(event):
-					py_obj = document.querySelector(".CodeMirror").CodeMirror
-					code = py_obj.getValue()
-					code2 = convert(code)
-					document["output"].innerHTML = ""
-					print(code2)
-					exec(code2)
+                    <div id="control" class="btn-group">
+                        <button id="back_button" class="btn btn-secondary btn-sm" onclick="back()"><i class="fa fa-backward"></i></button>
+                        <button id="play_button" class="btn btn-secondary btn-sm" onclick="playAnimation()"><i class="fa fa-play"></i></button>
+                        <button id="stop_button" class="btn btn-secondary btn-sm" onclick="stopAnimation()"><i class="fa fa-stop"></i></button>
+                        <button id="next_button" class="btn btn-secondary btn-sm" onclick="step()"><i class="fa fa-forward"></i></button>
+                    </div>
 
-				document["run_button"].bind("click", callScript)
-            </script>
-        
+                    <div id="accordion">                
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="dfs_radio">
+                                        <input type="radio" id="dfs_radio" class="mdl-radio__button" name="options" value="0" checked>
+                                    </label>
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#dfs" aria-expanded="false" aria-controls="dfs">
+                                        Depth First Search
+                                        <span class="badge badge-pill badge-primary">search</span>
+                                    </button>
+                                </h5>
+                            </div>        
+                            <div id="dfs" class="collapse" data-parent="#accordion">
+                                <div class="card-body">
+                                    The algorithm starts at the root node and explores as far as possible along each branch before backtracking.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="bfs_radio">
+                                        <input type="radio" id="bfs_radio" class="mdl-radio__button" name="options" value="1">
+                                    </label>
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#bfs" aria-expanded="false" aria-controls="bfs">
+                                        Breadth First Search
+                                        <span class="badge badge-pill badge-primary">search</span>
+                                    </button>
+                                </h5>
+                            </div>
+                            <div id="bfs" class="collapse" data-parent="#accordion">
+                                <div class="card-body">
+                                    
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="dijkstra_radio">
+                                            <input type="radio" id="dijkstra_radio" class="mdl-radio__button" name="options" value="2">
+                                        </label>
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#dijkstra" aria-expanded="false" aria-controls="dijkstra">
+                                            Dijkstra
+                                            <span class="badge badge-pill badge-success">shortest path</span>
+                                        </button>
+                                    </h5>
+                                </div>
+                                <div id="dijkstra" class="collapse" data-parent="#accordion">
+                                    <div class="card-body">
             
-            <div id="accordion">
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="dfs_radio">
-                                <input type="radio" id="dfs_radio" class="mdl-radio__button" name="options" value="0" checked>
-                            </label>
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#dfs" aria-expanded="false" aria-controls="dfs">
-                                Depth First Search
-                                <span class="badge badge-pill badge-primary">search</span>
-                            </button>
-                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div id="dfs" class="collapse" data-parent="#accordion">
-                        <div class="card-body">
-                            The algorithm starts at the root node and explores as far as possible along each branch before backtracking.
-                        </div>
-                    </div>
-                </div>                
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="bfs_radio">
-                                <input type="radio" id="bfs_radio" class="mdl-radio__button" name="options" value="1">
-                            </label>
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#bfs" aria-expanded="false" aria-controls="bfs">
-                                Breadth First Search
-                                <span class="badge badge-pill badge-primary">search</span>
-                            </button>
-                        </h5>
-                    </div>
-                    <div id="bfs" class="collapse" data-parent="#accordion">
-                        <div class="card-body">
-                            
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="dijkstra_radio">
-                                <input type="radio" id="dijkstra_radio" class="mdl-radio__button" name="options" value="2">
-                            </label>
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#dijkstra" aria-expanded="false" aria-controls="dijkstra">
-                                Dijkstra
-                                <span class="badge badge-pill badge-success">shortest path</span>
-                            </button>
-                        </h5>
-                    </div>
-                    <div id="dijkstra" class="collapse" data-parent="#accordion">
-                        <div class="card-body">
-
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="bellman_radio">
-                                <input type="radio" id="bellman_radio" class="mdl-radio__button" name="options" value="3">
-                            </label>
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#bellman" aria-expanded="false" aria-controls="bellman">
-                                Bellman-Ford
-                                <span class="badge badge-pill badge-success">shortest path</span>
-                            </button>
-                        </h5>
-                    </div>
-                    <div id="bellman" class="collapse" data-parent="#accordion">
-                        <div class="card-body">
-                            
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="prim_radio">
-                                <input type="radio" id="prim_radio" class="mdl-radio__button" name="options" value="4">
-                            </label>
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#prim" aria-expanded="false" aria-controls="prim">
-                                Prim
-                                <span class="badge badge-pill badge-warning">MST</span>
-                            </button>
-                        </h5>
-                    </div>
-                    <div id="prim" class="collapse" data-parent="#accordion">
-                        <div class="card-body">
-                            
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="kruskal_radio">
-                                <input type="radio" id="kruskal_radio" class="mdl-radio__button" name="options" value="5">
-                            </label>
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#kruskal" aria-expanded="false" aria-controls="kruskal">
-                                Kruskal
-                                <span class="badge badge-pill badge-warning">MST</span>
-                            </button>
-                        </h5>
-                    </div>
-                    <div id="kruskal" class="collapse" data-parent="#accordion">
-                        <div class="card-body">
-                            
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="kosaraju_radio">
-                                <input type="radio" id="kosaraju_radio" class="mdl-radio__button" name="options" value="6">
-                            </label>
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#kosaraju" aria-expanded="false" aria-controls="kosaraju">
-                                Kosaraju
-                                <span class="badge badge-pill badge-danger">connected component</span>
-                            </button>
-                        </h5>
-                    </div>
-                    <div id="kosaraju" class="collapse" data-parent="#accordion">
-                        <div class="card-body">
-                            
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="custom_radio">
-                                <input type="radio" id="custom_radio" class="mdl-radio__button" name="options" value="7">
-                            </label> 
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#custom" aria-expanded="false" aria-controls="custom">
-                                Custom Code
-                            </button>
-                        </h5>
-                    </div>
-                    <div id="custom" class="collapse" data-parent="#accordion">
-                        <div class="card-body">
-                            
-                        </div>
-                    </div>
                 </div>
                 
-            </div>
-            
-        </div>
-        <div class="mdl-layout__content" id="cy">
-            
-        </div>
-        <div class="mdl-layout__content"  id="cm">
-           
+            </nav>            
         </div>
 
-        <div class="mdl-layout__content" id=outputc>
-            <textarea readonly id="output"> </textarea>  
-        </div>
-
-        
-       
-        
-    </div> 
-</body>
-
+        <script src="script.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    </body>
+</html>
