@@ -30,13 +30,16 @@
 
     <body onload="brython()"> 
         <div class="wrapper d-flex align-items-stretch">
-            <nav id="sidebar-left">
-                <div class="custom-menu">
-                    <button type="button" id="collapse-left" class="btnc btnc-primary">
-                        <i class="fa fa-terminal"></i>
-                    </button>
-                </div>
-            </nav>
+            <div id="sidebar-left">
+                <nav>
+                    <div class="custom-menu">
+                        <button type="button" id="collapse-left" class="btnc btnc-primary">
+                            <i class="fa fa-terminal"></i>
+                        </button>
+                    </div>
+                </nav>
+                <div class="form-control" id="debug-console">.>_Hello, world!</div>
+            </div>
 
             <div id="content">
             </div>
@@ -101,7 +104,13 @@
                         <button id="stop_button" class="btn btn-secondary btn-sm" onclick="stopAnimation()"><i class="fa fa-stop"></i></button>
                         <button id="next_button" class="btn btn-secondary btn-sm" onclick="step()"><i class="fa fa-forward"></i></button>
                     </div>
-
+                    
+                    <div class="list-group" id="algorithms-list" role="tablist">
+                        <a class="list-group-item list-group-item-action" id="list-dfs-list" data-toggle="list">Depth First Search (DFS)</a>
+                        <a class="list-group-item list-group-item-action" id="list-bfs-list" data-toggle="list">Breadth First Search (BFS)</a>
+                        <a class="list-group-item list-group-item-action" id="list-dijkstra-list" data-toggle="list">Dijkstra</a>
+                    </div>
+                    
                     <div id="accordion">                
                         <div class="card">
                             <div class="card-header">

@@ -4,7 +4,7 @@ var myCodeMirror = CodeMirror(document.getElementById("sidebar-left"),{
     theme: "monokai",
     lineNumbers:true
 });
-myCodeMirror.setSize("100%", "100%");
+myCodeMirror.setSize("100%", "80%");
 
 Split(['#sidebar-left', '#content'], {
     gutterSize: 4,
