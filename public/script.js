@@ -1,5 +1,5 @@
 const navbar        = document.getElementById("navbar");
-const console       = document.getElementById("console");
+const control       = document.getElementById("control");
 const sidebarLeft   = document.getElementById("sidebar-left");
 const sidebarRight  = document.getElementById("sidebar-right");
 const collapseLeft  = document.getElementById("collapse-left");
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (direction === 'vertical') {
             side1 = navbar;
-            side2 = console;
+            side2 = control;
         } else {
             side1 = sidebarLeft;
             side2 = content;

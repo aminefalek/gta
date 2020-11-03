@@ -45,6 +45,15 @@
                 <!-- Vertical control resizer -->
                 <div class="resizer" data-direction="vertical"></div>
 
+                <div id="control">
+                    <div id="control" class="btn-group">
+                        <button type="button" class="btn btn-light btn-sm"><i class="fa fa-play"></i></button>
+                        <button type="button" class="btn btn-light btn-sm"><i class="fa fa-step-forward"></i></button>
+                        <button type="button" class="btn btn-light btn-sm"><i class="fa fa-stop"></i></button>
+                    </div>
+                    <input type="range" class="custom-range" id="speedControl">
+                </div>                
+
                 <!-- Console -->
                 <div class="form-control" id="console">.>_Hello, world!</div>
             </div>
@@ -108,13 +117,6 @@
                                 <button type="button" class="btn btn-link btn-sm" onclick="updateGraphWeights()">update</button>
                             </div>
                         </div>
-                    </div>
-
-                    <div id="control" class="btn-group">
-                        <button id="back_button" class="btn btn-secondary btn-sm" onclick="back()"><i class="fa fa-backward"></i></button>
-                        <button id="play_button" class="btn btn-secondary btn-sm" onclick="playAnimation()"><i class="fa fa-play"></i></button>
-                        <button id="stop_button" class="btn btn-secondary btn-sm" onclick="stopAnimation()"><i class="fa fa-stop"></i></button>
-                        <button id="next_button" class="btn btn-secondary btn-sm" onclick="step()"><i class="fa fa-forward"></i></button>
                     </div>
                     
                     <div class="list-group" id="algorithms-list" role="tablist">
