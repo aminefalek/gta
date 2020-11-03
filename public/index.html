@@ -30,20 +30,33 @@
 
     <body onload="brython()"> 
         <div class="wrapper d-flex align-items-stretch">
+
+            <!-- Left sidebar -->
             <div id="sidebar-left">
-                <nav>
+                <!-- Placeholder for CodeMirror -->
+                <nav id="navbar">
                     <div class="custom-menu">
                         <button type="button" id="collapse-left" class="btnc btnc-primary">
                             <i class="fa fa-terminal"></i>
                         </button>
                     </div>
                 </nav>
-                <div class="form-control" id="debug-console">.>_Hello, world!</div>
+
+                <!-- Vertical control resizer -->
+                <div class="resizer" data-direction="vertical"></div>
+
+                <!-- Console -->
+                <div class="form-control" id="console">.>_Hello, world!</div>
             </div>
 
+            <!-- Horizontal control resizer -->
+            <div class="resizer" data-direction="horizontal"></div>
+
+            <!-- Graph display area -->
             <div id="content">
             </div>
 
+            <!-- Right sidebar -->
             <nav id="sidebar-right">
                 <div class="custom-menu">
                     <button type="button" id="collapse-right" class="btnc btnc-primary">
@@ -52,7 +65,6 @@
                 </div>
 
                 <div id="menu">
-
                     <div id="graph_select">
                         <div class="input-group input-group-sm mb-3">
                             <div class="input-group-prepend">
