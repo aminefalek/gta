@@ -76,6 +76,7 @@ button:focus {
     background: #fff;
     color: #000;
     box-shadow: -4px 0px 4px -6px black;
+    user-select: none;
     -webkit-transition: all 0.5s;
     -o-transition: all 0.5s;
     transition: all 0.5s;
@@ -192,22 +193,19 @@ button:focus {
 
 #graph_select {
     margin-top: 20px;
-    margin-right: 5px;
-    margin-left: 5px;
+    margin-right: 10px;
+    margin-left: 10px;
     margin-bottom: 0px;
 }
 
 #graph_edit {
     margin-top: -10px;
-    margin-right: 5px;
-    margin-left: 5px;
+    margin-right: 10px;
+    margin-left: 10px;
 }
 
-#algorithms-list {
+#edit-mode {
     margin-top: 10px;
-    margin-right: 5px;
-    margin-left: 5px;
-    margin-bottom: 0px;
 }
 
 #dropdown {
@@ -233,6 +231,11 @@ button:focus {
 #accordion {
     margin-top: 20px;
     padding: 10px;
+}
+
+.vertex-input {
+    float: right;
+    max-width: 100px;
 }
 
 .collapsible-link::before {

@@ -108,15 +108,36 @@
                                 <button class="btn btn-outline-secondary" type="button" onclick="">save</button>
                             </div>
                         </div>
-                        <h5 class="mb-0">
-                            <button class="btn btn-link btn-sm" data-toggle="collapse" data-target="#collapseEdges" aria-expanded="true" aria-controls="collapseOne" onclick="editMode()">Edit Mode</button>
-                        </h5>
-                        <div class="collapse" id="collapseEdges">
-                            <div class="card card-body">
-                                <label><b>Add node:</b> left click</label>
-                                <label><b>Add edge:</b> ctrl + left click</label>
-                                <label><b>Delete:</b> shift + left click</label>
-                                <table class="table table-sm text-center" id="graph_table">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="toggle" data-toggle="collapse" data-target="#edit-mode" aria-expanded="false">
+                            <label class="custom-control-label" for="toggle"><h7 class="small font-italic text-muted">edit mode</h7></label>
+                        </div>
+                        <div class="collapse" id="edit-mode">
+                            <div class="card card-body border-danger">
+                                <ul class="list-unstyled">
+                                    <li class="media align-items-center">
+                                        <img src="icons/add-vertex.png" width="28" class="mr-3">
+                                        <div class="media-body">
+                                            <h7 class="mb-0">add vertex</h7>
+                                            <h7 class="small font-italic text-muted">left click</h7>
+                                        </div>
+                                    </li>
+                                    <li class="media align-items-center">
+                                        <img src="icons/remove-vertex.png" width="28" class="mr-3">
+                                        <div class="media-body">
+                                            <h7 class="mb-0">remove vertex</h7>
+                                            <h7 class="small font-italic text-muted">shift + left click</h7>
+                                        </div>
+                                    </li>
+                                    <li class="media align-items-center">
+                                        <img src="icons/add-edge.png" width="28" class="mr-3">
+                                        <div class="media-body">
+                                            <h7 class="mb-0">add edge</h7>
+                                            <h7 class="small font-italic text-muted">ctrl + left click</h7>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <table class="table table-sm text-center" id="graph_table" hidden="true">
                                     <thead>
                                         <tr>
                                             <th scope="col">tail</th>
@@ -126,7 +147,7 @@
                                     </thead>
                                     <tbody></tbody>
                                 </table>
-                                <button type="button" class="btn btn-link btn-sm" onclick="updateGraphWeights()">update</button>
+                                <button type="button" class="btn btn-link btn-sm" hidden="true" onclick="updateGraphWeights()">update</button>
                             </div>
                         </div>
                     </div>
@@ -149,6 +170,7 @@
                                                     <p class="mb-0">DFS</p><span class="small font-italic text-muted">Depth First Search</span>
                                                 </label>
                                             </div>
+                                            <input for="customRadio1" class="form-control form-control-sm vertex-input" type="text" placeholder="source vertex">
                                         </li>
                                         <li class="list-group-item d-flex align-items-center justify-content-between">
                                             <div class="custom-control custom-radio">
@@ -157,6 +179,7 @@
                                                     <p class="mb-0">BFS</p><span class="small font-italic text-muted">Breadth First Search</span>
                                                 </label>
                                             </div>
+                                            <input for="customRadio2" class="form-control form-control-sm vertex-input" type="text" placeholder="source vertex">
                                         </li>
                                     </ul>
                                 </div>
@@ -214,7 +237,14 @@
                             <div id="collapseFour" aria-labelledby="headingFour" data-parent="#accordion" class="collapse">
                                 <div class="card-body">
                                     <ul class="list-group">
-
+                                        <li class="list-group-item d-flex align-items-center justify-content-between">
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="customRadio5" type="radio" name="customRadio">
+                                                <label class="custom-control-label" for="customRadio5">
+                                                    <p class="mb-0">Kosaraju</p><span class="small font-italic text-muted">Strongly Connected Components</span>
+                                                </label>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -230,17 +260,27 @@
                                     <ul class="list-group">
                                         <li class="list-group-item rounded-0 d-flex align-items-center justify-content-between">
                                             <div class="custom-control custom-radio">
-                                                <input class="custom-control-input" id="customRadio5" type="radio" name="customRadio">
-                                                <label class="custom-control-label" for="customRadio5">
+                                                <input class="custom-control-input" id="customRadio6" type="radio" name="customRadio">
+                                                <label class="custom-control-label" for="customRadio6">
                                                     <p class="mb-0">Dijkstra</p><span class="small font-italic text-muted">one-to-all</span>
                                                 </label>
                                             </div>
+                                            <input for="customRadio5" class="form-control form-control-sm vertex-input" type="text" placeholder="source vertex">
                                         </li>
                                         <li class="list-group-item d-flex align-items-center justify-content-between">
                                             <div class="custom-control custom-radio">
-                                                <input class="custom-control-input" id="customRadio6" type="radio" name="customRadio">
-                                                <label class="custom-control-label" for="customRadio6">
-                                                    <p class="mb-0">Bellman-Ford</p><span class="small font-italic text-muted">many-to-many</span>
+                                                <input class="custom-control-input" id="customRadio7" type="radio" name="customRadio">
+                                                <label class="custom-control-label" for="customRadio7">
+                                                    <p class="mb-0">Bellman-Ford</p><span class="small font-italic text-muted">one-to-all</span>
+                                                </label>
+                                            </div>
+                                            <input for="customRadio6" class="form-control form-control-sm vertex-input" type="text" placeholder="source vertex">
+                                        </li>
+                                        <li class="list-group-item d-flex align-items-center justify-content-between">
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="customRadio8" type="radio" name="customRadio">
+                                                <label class="custom-control-label" for="customRadio8">
+                                                    <p class="mb-0">Floyd Warshall</p><span class="small font-italic text-muted">all-to-all</span>
                                                 </label>
                                             </div>
                                         </li>
