@@ -26,10 +26,13 @@
 
         <!-- BRYTHON -->
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.0/brython.min.js"></script>
+
+        <!-- CYTOSCAPE -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>
     </head>
 
     <body onload="brython()"> 
-        <div class="wrapper d-flex align-items-stretch">
+        <div id="whiteboard" class="wrapper d-flex align-items-stretch">
 
             <!-- Left sidebar -->
             <div id="sidebar-left">
@@ -45,9 +48,10 @@
                 <!-- Vertical control resizer -->
                 <div class="resizer" data-direction="vertical"></div>
 
+                <!-- Control panel -->
                 <div id="control">
-                    <div id="control" class="btn-group">
-                        <button type="button" class="btn btn-light btn-sm"><i class="fa fa-play"></i></button>
+                    <div class="btn-group">
+                        <button id="run-button" type="button" class="btn btn-light btn-sm"><i class="fa fa-play"></i></button>
                         <button type="button" class="btn btn-light btn-sm"><i class="fa fa-step-forward"></i></button>
                         <button type="button" class="btn btn-light btn-sm"><i class="fa fa-stop"></i></button>
                     </div>
@@ -74,6 +78,14 @@
                 </div>
 
                 <div id="menu">
+                    <div class="media">
+                        <img src="network.svg" class="w-25 p-3">
+                            <div class="media-body">
+                            <h5 class="mt-0"><br>Graph Theory App</h5>
+                            Draw graphs. Code algorithms.
+                        </div>
+                    </div>
+                    
                     <div id="graph_select">
                         <div class="input-group input-group-sm mb-3">
                             <div class="input-group-prepend">
@@ -119,67 +131,124 @@
                         </div>
                     </div>
                     
-                    <div class="list-group" id="algorithms-list" role="tablist">
-                        <a class="list-group-item list-group-item-action" id="list-dfs-list" data-toggle="list">Depth First Search (DFS)</a>
-                        <a class="list-group-item list-group-item-action" id="list-bfs-list" data-toggle="list">Breadth First Search (BFS)</a>
-                        <a class="list-group-item list-group-item-action" id="list-dijkstra-list" data-toggle="list">Dijkstra</a>
-                    </div>
-                    
-                    <div id="accordion">                
+                    <!-- Accordion -->
+                    <div id="accordion" class="accordion">
+
+                        <!-- Accordion item 1 -->
                         <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">
-                                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="dfs_radio">
-                                        <input type="radio" id="dfs_radio" class="mdl-radio__button" name="options" value="0" checked>
-                                    </label>
-                                    <button class="btn btn-link" data-toggle="collapse" data-target="#dfs" aria-expanded="false" aria-controls="dfs">
-                                        Depth First Search
-                                        <span class="badge badge-pill badge-primary">search</span>
-                                    </button>
-                                </h5>
-                            </div>        
-                            <div id="dfs" class="collapse" data-parent="#accordion">
+                            <div id="headingOne" class="card-header bg-white shadow-sm border-0">
+                                <h6 class="mb-0 font-weight-bold"><a href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="d-block position-relative text-dark text-uppercase collapsible-link py-2">Graph Exploration</a></h6>
+                            </div>
+                            <div id="collapseOne" aria-labelledby="headingOne" data-parent="#accordion" class="collapse show">
                                 <div class="card-body">
-                                    The algorithm starts at the root node and explores as far as possible along each branch before backtracking.
+                                    <ul class="list-group">
+                                        <li class="list-group-item rounded-0 d-flex align-items-center justify-content-between">
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="customRadio1" type="radio" name="customRadio">
+                                                <label class="custom-control-label" for="customRadio1">
+                                                    <p class="mb-0">DFS</p><span class="small font-italic text-muted">Depth First Search</span>
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item d-flex align-items-center justify-content-between">
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="customRadio2" type="radio" name="customRadio">
+                                                <label class="custom-control-label" for="customRadio2">
+                                                    <p class="mb-0">BFS</p><span class="small font-italic text-muted">Breadth First Search</span>
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Accordion item 2 -->
                         <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">
-                                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="bfs_radio">
-                                        <input type="radio" id="bfs_radio" class="mdl-radio__button" name="options" value="1">
-                                    </label>
-                                    <button class="btn btn-link" data-toggle="collapse" data-target="#bfs" aria-expanded="false" aria-controls="bfs">
-                                        Breadth First Search
-                                        <span class="badge badge-pill badge-primary">search</span>
-                                    </button>
-                                </h5>
+                            <div id="headingTwo" class="card-header bg-white shadow-sm border-0">
+                                <h6 class="mb-0 font-weight-bold"><a href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" class="d-block position-relative collapsed text-dark text-uppercase collapsible-link py-2">Trees</a></h6>
                             </div>
-                            <div id="bfs" class="collapse" data-parent="#accordion">
+                            <div id="collapseTwo" aria-labelledby="headingTwo" data-parent="#accordion" class="collapse">
                                 <div class="card-body">
-                                    
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">
-                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="dijkstra_radio">
-                                            <input type="radio" id="dijkstra_radio" class="mdl-radio__button" name="options" value="2">
-                                        </label>
-                                        <button class="btn btn-link" data-toggle="collapse" data-target="#dijkstra" aria-expanded="false" aria-controls="dijkstra">
-                                            Dijkstra
-                                            <span class="badge badge-pill badge-success">shortest path</span>
-                                        </button>
-                                    </h5>
-                                </div>
-                                <div id="dijkstra" class="collapse" data-parent="#accordion">
-                                    <div class="card-body">
-            
-                                    </div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item rounded-0 d-flex align-items-center justify-content-between">
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="customRadio1" type="radio" name="customRadio">
+                                                <label class="custom-control-label" for="customRadio1">
+                                                    <p class="mb-0">Prim</p><span class="small font-italic text-muted">Minimum Spanning Tree</span>
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item d-flex align-items-center justify-content-between">
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="customRadio2" type="radio" name="customRadio">
+                                                <label class="custom-control-label" for="customRadio2">
+                                                    <p class="mb-0">Kruskal</p><span class="small font-italic text-muted">Minimum Spanning Tree</span>
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Accordion item 3 -->
+                        <div class="card">
+                            <div id="headingThree" class="card-header bg-white shadow-sm border-0">
+                                <h6 class="mb-0 font-weight-bold"><a href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" class="d-block position-relative collapsed text-dark text-uppercase collapsible-link py-2">Topological Sort</a></h6>
+                            </div>
+                            <div id="collapseThree" aria-labelledby="headingThree" data-parent="#accordion" class="collapse">
+                                <div class="card-body">
+                                    <ul class="list-group">
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Accordion item 4 -->
+                        <div class="card">
+                            <div id="headingFour" class="card-header bg-white shadow-sm border-0">
+                                <h6 class="mb-0 font-weight-bold"><a href="#" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" class="d-block position-relative collapsed text-dark text-uppercase collapsible-link py-2">Connected Components</a></h6>
+                            </div>
+                            <div id="collapseFour" aria-labelledby="headingFour" data-parent="#accordion" class="collapse">
+                                <div class="card-body">
+                                    <ul class="list-group">
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Accordion item 5 -->
+                        <div class="card">
+                            <div id="headingFive" class="card-header bg-white shadow-sm border-0">
+                                <h6 class="mb-0 font-weight-bold"><a href="#" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive" class="d-block position-relative collapsed text-dark text-uppercase collapsible-link py-2">Shortest Path Algorithms</a></h6>
+                            </div>
+                            <div id="collapseFive" aria-labelledby="headingFive" data-parent="#accordion" class="collapse">
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item rounded-0 d-flex align-items-center justify-content-between">
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="customRadio1" type="radio" name="customRadio">
+                                                <label class="custom-control-label" for="customRadio1">
+                                                    <p class="mb-0">Dijkstra</p><span class="small font-italic text-muted">one-to-all</span>
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item d-flex align-items-center justify-content-between">
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="customRadio2" type="radio" name="customRadio">
+                                                <label class="custom-control-label" for="customRadio2">
+                                                    <p class="mb-0">Bellman-Ford</p><span class="small font-italic text-muted">many-to-many</span>
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
