@@ -4,7 +4,6 @@ const sidebarLeft   = document.getElementById("sidebar-left");
 const sidebarRight  = document.getElementById("sidebar-right");
 const collapseLeft  = document.getElementById("collapse-left");
 const collapseRight = document.getElementById("collapse-right");
-const content       = document.getElementById('content');
 const runButton     = document.getElementById('run-button');
 
 const codeMirror = CodeMirror(navbar, {
@@ -52,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
             side2 = control;
         } else {
             side1 = sidebarLeft;
-            side2 = content;
+            side2 = sidebarLeft;
         }
 
         // The current position of mouse
@@ -237,7 +236,7 @@ function updateGraph() {
 
 function render(elements) {
     cy = cytoscape({
-        container: document.getElementById('content'),
+        container: document.getElementById('whiteboard'),
         elements: elements,
         style: defaultStyle
     });

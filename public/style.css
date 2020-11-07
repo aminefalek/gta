@@ -7,6 +7,13 @@ body {
     width: 100%;
 }
 
+#whiteboard {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: transparent;
+}
+
 .btn {
     margin-right: 2px;
     margin-left: 2px;
@@ -48,12 +55,15 @@ button:focus {
 .resizer[data-direction="horizontal"] {
     cursor: ew-resize;
     height: 100vh;
-    width: 5px;
+    min-width: 5px;
+    max-width: 5px;
+    position: relative;
 }
 .resizer[data-direction="vertical"] {
     cursor: ns-resize;
     position: absolute;
-    height: 5px;
+    min-height: 5px;
+    max-height: 5px;
     width: 100%;
 }
 
@@ -69,9 +79,10 @@ button:focus {
 }
 
 #sidebar-right {
+    margin-left: auto;
+    margin-right: 0;
     min-width: 20%;
     max-width: 20%;
-    float: right;
     height: 100vh;
     background: #fff;
     color: #000;
@@ -183,12 +194,6 @@ button:focus {
     color: white;
     border-color: transparent;
     font: 0.8rem Inconsolata, monospace;
-}
-
-#content {
-    margin: 0 auto;
-    background-color: khaki;
-    z-index: -2;
 }
 
 #graph_select {
