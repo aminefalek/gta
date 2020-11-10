@@ -28,7 +28,9 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.0/brython.min.js"></script>
 
         <!-- CYTOSCAPE -->
+        <script src="https://unpkg.com/lodash@4.17.4"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>
+        <script src="https://unpkg.com/cytoscape-edgehandles/cytoscape-edgehandles.js"></script>
     </head>
 
     <body onload="brython()">
@@ -122,15 +124,15 @@
                                     <li class="media align-items-center">
                                         <img src="icons/remove-vertex.png" width="28" class="mr-3">
                                         <div class="media-body">
-                                            <h7 class="mb-0">remove vertex</h7>
-                                            <h7 class="small font-italic text-muted">shift + left click</h7>
+                                            <h7 class="mb-0">remove element</h7>
+                                            <h7 class="small font-italic text-muted">right click</h7>
                                         </div>
                                     </li>
                                     <li class="media align-items-center">
                                         <img src="icons/add-edge.png" width="28" class="mr-3">
                                         <div class="media-body">
                                             <h7 class="mb-0">add edge</h7>
-                                            <h7 class="small font-italic text-muted">ctrl + left click</h7>
+                                            <h7 class="small font-italic text-muted">hover vertex + drag from handle</h7>
                                         </div>
                                     </li>
                                 </ul>

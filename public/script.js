@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /*------------------------------ Style ------------------------------*/
 
-var defaultStyle = [
+var cyStyle = [
     {
       selector: 'node',
       style: {
@@ -141,166 +141,137 @@ var defaultStyle = [
         'label': 'data(id)'
       }
     },
-
     {
       selector: 'edge',
       style: {
         'width': 3,
-        'color': 'grey',
-        'line-color': '#ccc',
-        'target-arrow-color': '#ccc',
-        'target-arrow-shape': 'vee',
+        'color': '#666666',
+        'line-color': '#666666',
+        'target-arrow-color': '#666666',
+        'target-arrow-shape': 'triangle',
         'label': 'data(cost)',
         'curve-style': 'bezier',
         'text-margin-y': -10
       }
+    },
+    {
+        selector: ".eh-handle",
+        style: {
+            "background-color": "#ff6347",
+            content: "",
+            width: 10,
+            height: 10,
+            shape: "ellipse",
+            "overlay-opacity": 0,
+            "border-width": 10,
+            "border-opacity": 0
+        }
+    },
+    {
+        selector: ".eh-hover",
+        style: {
+            "background-color": "#ff6347"
+        }
+    },
+    {
+        selector: ".eh-source",
+        style: {
+            "border-width": 2,
+            "border-color": "#ff6347"
+        }
+    },
+    {
+        selector: ".eh-target",
+        style: {
+            "border-width": 2,
+            "border-color": "#ff6347",
+            "background-color": "#ff6347"
+        }
+    },
+    {
+        selector: ".eh-preview, .eh-ghost-edge",
+        style: {
+          "background-color": "#ff6347",
+          "line-color": "#ff6347",
+          "target-arrow-color": "#ff6347",
+          "source-arrow-color": "#ff6347"
+        }
     }
 ];
+
 let options = {
-  name: 'cose',
-  animate: false,
-  nodeSep: 20,
-  idealEdgeLength: 10
+    name: 'cose',
+    animate: false,
+    nodeSep: 20,
+    idealEdgeLength: 10
 };
 
 /*---------------------------- Functions ----------------------------*/
 
-function resetTable() {
-    for(var i = table.rows.length - 1; i > 0; i--) {
-        table.deleteRow(i);
-    }
-}
-
-function generateTable() {
-    resetTable();
-    
-    cy.edges().forEach(function(edge) {
-        addRow(edge.data('source'), edge.data('target'), edge.data('cost'));
-    });
-}
-
-function addRow(tail, head, cost) {
-    var row = table.insertRow();
-
-    var tailCell = row.insertCell(0);
-    var headCell = row.insertCell(1);
-    var costCell = row.insertCell(2);
-    
-    tailCell.appendChild(document.createTextNode(tail));
-    headCell.appendChild(document.createTextNode(head));
-    costCell.innerHTML = "<input class='col-xs-2' type='number' placeholder='" + cost + "' style='width:100px'>";
-}
-
-function getNeighbourIndex(tail, head){
-    for (var i=0; i<graph[tail].length; i++) {
-        var neighbour = graph[tail][i];
-        
-        if (neighbour[0] == head) {
-            return i;
-        }
-    }
-}
-
-window.updateGraphWeights = function updateGraphWeights() {
-    for (var i = 1, row; row = table.rows[i]; i++) {
-        var cost = table.rows[i].cells[2].children[0].value;        
-        if (cost == '') {
-            continue;
-        }
-        
-        var tail = table.rows[i].cells[0].innerHTML;
-        var head = table.rows[i].cells[1].innerHTML;
-        
-        cy.edges().forEach(function(edge) {
-            if (edge.data('source') == tail && edge.data('target') == head) {
-                edge.data('cost', cost);
-                
-                var neighbourIndex = getNeighbourIndex(tail, head);
-                graph[tail][neighbourIndex][1] = cost;
-            }
-        });
-    }
-}
-
-function updateGraph() {
-    graph = {};
-    
-    cy.nodes().forEach(function(node) {
-        graph[node.data('id')] = [];
-    });
-    
-    cy.edges().forEach(function(edge) {
-        graph[edge.data('source')].push([edge.data('target'), edge.data('cost')]);
-    });
-}
-
 function render(elements) {
     cy = cytoscape({
         container: document.getElementById('whiteboard'),
+        layout: {
+            name: "grid",
+            rows: 2,
+            cols: 2
+        },
         elements: elements,
-        style: defaultStyle
+        style: cyStyle
     });
     cy.layout(options);
     
+    // add node using left mouse click
     cy.on('click', function(cyEvent){
         if (isEditMode) {
             var target = cyEvent.target;
             
-            // background click
+            // empty area click
             if(target === cy){
-                if (selectedNodeCounter > 0) {
-                    selectedTailNode.style('background-color', 'black');
-                }
-                
-                else {
-                    cy.add([
+                cy.add([
                     { group:'nodes', data: { id: nodeId }, renderedPosition: cyEvent.renderedPosition }
-                    ]);
-
-                    // add node to graph
-                    graph[nodeId] = [];
-                    nodeId++;
-                }
-                selectedNodeCounter = 0;
+                ]);
+                // add node to graph
+                graph[nodeId++] = [];
             }
-            
-            // element click (node or edge)
-            else {
-                
-                // Adding an Edge
-                if (event.ctrlKey && target.isNode() && selectedNodeCounter == 0) {
-                    selectedTailNode = target;
-                    selectedTailNode.style('background-color', 'yellow');
-                    selectedNodeCounter++;
-                }
-                
-                else if (event.ctrlKey && target.isNode() && selectedNodeCounter == 1) {
-                    selectedTailNode.style('background-color', 'black');
-                    selectedHeadNode = target;
-                    selectedNodeCounter = 0;
-                    
-                    cy.add([
-                        { group:'edges', data: { source: selectedTailNode.id(), target: selectedHeadNode.id(), cost: 1 } }
-                    ]);
-                    
-                    addRow(selectedTailNode.id(), selectedHeadNode.id(), 1);
-                    
-                    // add edge to graph
-                    graph[selectedTailNode.id()].push([selectedHeadNode.id(), 1]);
-                }
-                
-                // Removing an element (node or edge)
-                if (event.shiftKey) {
-                    if (selectedNodeCounter > 0) {
-                        selectedTailNode.style('background-color', 'black');
-                        selectedNodeCounter = 0;
-                    }
-                    cy.remove(cy.$('#' + target.id()));
-                    generateTable();
-                    updateGraph();
-                }
-            }      
         }
+    });
+
+    // remove node or edge using right mouse click
+    cy.on('cxttap', function(cyEvent) {
+        if (isEditMode) {
+            var target = cyEvent.target;            
+            // check that target is a cy element
+            if(target != cy) {
+                cy.remove(cy.$('#' + target.id()));
+            }
+        }
+    });
+
+    // add edge using node handle
+    eh = cy.edgehandles({
+        preview: false,
+        toggleOffOnLeave: false,
+        handleNodes: "node",
+        handleSize: 2,
+        snap: true,
+        snapThreshold: 20,
+        snapFrequency: 15,
+        edgeType: function() {
+            return 'flat';
+        },
+        handlePosition: function( node ){
+            return 'middle bottom';
+        },
+        loopAllowed: function( node ){
+            return true;
+        },
+        edgeParams: function( sourceNode, targetNode, i ){
+            return { group:'edges', data: { source: sourceNode.id(), target: targetNode.id(), cost: 1 } };
+        },
+        complete: function( sourceNode, targetNode, addedEles ){
+            graph[sourceNode.id()].push([targetNode.id(), 1]);
+        },
     });
 }
 
@@ -340,10 +311,16 @@ window.clearGraph = function clearGraph() {
 
 window.editMode = function editMode() {
     isEditMode = !isEditMode;
+    if (isEditMode) {
+        eh.enable();
+    }
+    else {
+        eh.disable();
+    }
 }
 
 var graph = {};
-var cy;
+var cy, eh;
 var isEditMode = false;
 var nodeId = 0;
 var selectedNodeCounter = 0;
