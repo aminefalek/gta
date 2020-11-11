@@ -248,12 +248,15 @@ function render(elements) {
         }
     });
 
+    cy.on('mouseout', 'node', function(event) {
+        setTimeout(function(){ eh.hide(); }, 1500);
+    });
+
     // add edge using node handle
     eh = cy.edgehandles({
         preview: false,
         toggleOffOnLeave: false,
         handleNodes: "node",
-        handleSize: 2,
         snap: true,
         snapThreshold: 20,
         snapFrequency: 15,
