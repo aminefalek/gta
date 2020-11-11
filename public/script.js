@@ -295,6 +295,10 @@ function drawGraph() {
     render(elements);
 }
 
+function center() {
+    cy.center();
+}
+
 window.loadGraph = function loadGraph() {
     var dropdown = document.getElementById("dropdown");
     var graphName = dropdown.options[dropdown.selectedIndex].text;

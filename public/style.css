@@ -275,3 +275,11 @@ button:focus {
 .collapsible-link[aria-expanded="true"]::before {
     transform: rotate(180deg);
 }
+
+#center-canvas {
+    font-size: 25px;
+    color: mediumslateblue;
+    margin-top: auto;
+    margin-bottom: 10px;
+    z-index: 10;
+}
