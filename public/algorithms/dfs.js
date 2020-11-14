@@ -5,8 +5,6 @@ export function dfs(graph, cy, root, visited) {
         return;
     }
     
-    console.log(visited);
-    
     highlightNode(root, 'red');
     visited.push(root);
     var neighbours = graph[root];

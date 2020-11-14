@@ -1,132 +1,3 @@
-const navbar        = document.getElementById("navbar");
-const control       = document.getElementById("control");
-const sidebarLeft   = document.getElementById("sidebar-left");
-const sidebarRight  = document.getElementById("sidebar-right");
-const collapseLeft  = document.getElementById("collapse-left");
-const collapseRight = document.getElementById("collapse-right");
-const runButton     = document.getElementById('run-button');
-
-const codeMirror = CodeMirror(navbar, {
-    value:"def example():\n\tprint(\"Hello, world!\")\n\nexample()",
-    mode: "python",
-    theme: "monokai",
-    lineNumbers:true
-});
-codeMirror.setSize("100%", "100%");
-
-// Toggle run/pause button icon in control panel
-runButton.onclick = function() {
-    runButton.firstChild.classList.toggle('fa-pause');
-};
-
-// Toggle right sidebar with transition animation
-collapseRight.onclick = function() {
-    var offset = window.innerWidth - (sidebarRight.offsetLeft + sidebarRight.clientWidth);
-    if (offset < 0) {
-        sidebarRight.style.marginRight = '0px';
-    }
-    else {
-        sidebarRight.style.marginRight = -sidebarRight.clientWidth + 'px';
-    }
-};
-
-// Toggle left sidebar with transition animation
-collapseLeft.onclick = function() {
-    sidebarLeft.classList.add('transition');
-    if (sidebarLeft.offsetLeft < 0) {
-        sidebarLeft.style.marginLeft = '0px';
-    } 
-    else {
-        sidebarLeft.style.marginLeft = -sidebarLeft.clientWidth + 'px';
-    }
-};
-
-document.addEventListener('DOMContentLoaded', function() {
-    const resizable = function(resizer) {
-        const direction   = resizer.getAttribute('data-direction') || 'horizontal';
-        var side1, side2;
-
-        if (direction === 'vertical') {
-            side1 = navbar;
-            side2 = control;
-        } else {
-            side1 = sidebarLeft;
-            side2 = sidebarLeft;
-        }
-
-        // The current position of mouse
-        let x = 0;
-        let y = 0;
-        let side1Height = 0;
-        let side1Width  = 0;
-
-        // Handle the mousedown event
-        const mouseDownHandler = function(e) {
-            // Disable transition animation when manually resizing sidebar
-            sidebarLeft.classList.remove('transition');
-
-            // Get the current mouse position
-            x = e.clientX;
-            y = e.clientY;
-            const rect = side1.getBoundingClientRect();
-            side1Height = rect.height;
-            side1Width  = rect.width;
-
-            document.addEventListener('mousemove', mouseMoveHandler);
-            document.addEventListener('mouseup', mouseUpHandler);
-        };
-
-        const mouseMoveHandler = function(e) {
-            const dx = e.clientX - x;
-            const dy = e.clientY - y;
-
-            switch (direction) {
-                case 'vertical':
-                    const h = (side1Height + dy) * 100 / resizer.parentNode.getBoundingClientRect().height;
-                    side1.style.height = `${h}%`;
-                    break;
-                case 'horizontal':
-                default:
-                    const w = (side1Width + dx) * 100 / resizer.parentNode.getBoundingClientRect().width;
-                    side1.style.width = `${w}%`;
-                    break;
-            }
-
-            const cursor = direction === 'horizontal' ? 'col-resize' : 'row-resize';
-            resizer.style.cursor = cursor;
-            document.body.style.cursor = cursor;
-
-            side1.style.userSelect = 'none';
-            side1.style.pointerEvents = 'none';
-
-            side2.style.userSelect = 'none';
-            side2.style.pointerEvents = 'none';
-        };
-
-        const mouseUpHandler = function() {
-            resizer.style.removeProperty('cursor');
-            document.body.style.removeProperty('cursor');
-
-            side1.style.removeProperty('user-select');
-            side1.style.removeProperty('pointer-events');
-
-            side2.style.removeProperty('user-select');
-            side2.style.removeProperty('pointer-events');
-
-            document.removeEventListener('mousemove', mouseMoveHandler);
-            document.removeEventListener('mouseup', mouseUpHandler);
-        };
-
-        // Attach the handler
-        resizer.addEventListener('mousedown', mouseDownHandler);
-    };
-
-    // Query all resizers
-    document.querySelectorAll('.resizer').forEach(function(ele) {
-        resizable(ele);
-    });
-});
-
 /*------------------------------ Style ------------------------------*/
 
 var cyStyle = [
@@ -220,19 +91,30 @@ function render(elements) {
         style: cyStyle
     });
     cy.layout(options);
+    cy.userZoomingEnabled(false);
     
     // add node using left mouse click
     cy.on('click', function(cyEvent){
         if (isEditMode) {
             var target = cyEvent.target;
-            
-            // empty area click
-            if(target === cy){
-                cy.add([
-                    { group:'nodes', data: { id: nodeId }, renderedPosition: cyEvent.renderedPosition }
-                ]);
-                // add node to graph
-                graph[nodeId++] = [];
+
+            if (target === cy) {
+                if (selectedEdge) {
+                    selectedEdge.data('cost', numberInput.value == '' ? 1: numberInput.value);
+                    resetEdgeStyle(selectedEdge);
+                    selectedEdge.tippy.destroy();
+                    selectedEdge = null;
+                } else {
+                    cy.add([
+                        { group:'nodes', data: { id: nodeId }, renderedPosition: cyEvent.renderedPosition }
+                    ]);
+                    graph[nodeId++] = [];
+                }                
+            } else if (target.isEdge() && !selectedEdge) {
+                selectedEdge = target;
+                selectedEdge.style( { 'line-color' : 'tomato', 'target-arrow-color': 'tomato' });
+                numberInput.value = selectedEdge.data('cost');
+                enableEdgeControl(selectedEdge);
             }
         }
     });
@@ -240,15 +122,25 @@ function render(elements) {
     // remove node or edge using right mouse click
     cy.on('cxttap', function(cyEvent) {
         if (isEditMode) {
-            var target = cyEvent.target;            
-            // check that target is a cy element
-            if(target != cy) {
-                cy.remove(cy.$('#' + target.id()));
+            if (selectedEdge) {
+                selectedEdge.data('cost', numberInput.value);
+                resetEdgeStyle(selectedEdge);
+                selectedEdge.tippy.destroy();
+                selectedEdge = null;
+            } else {
+                var target = cyEvent.target;
+                if(target != cy) {
+                    cy.remove(cy.$('#' + target.id()));
+                }
             }
+            
         }
     });
 
     cy.on('mouseout', 'node', function(event) {
+        if (event.target.tippy) {
+            event.target.tippy.destroy();
+        }        
         setTimeout(function(){ eh.hide(); }, 1500);
     });
 
@@ -278,28 +170,79 @@ function render(elements) {
     });
 }
 
+function resetEdgeStyle(edge) {
+    if (edge) {
+        edge.style( { 'line-color' : '#666666', 'target-arrow-color': '#666666' });
+    }
+}
 
-function drawGraph() {
-    var elements = [];
-    resetTable();
-    
-    Object.keys(graph).forEach(function(tail) {
-        elements.push({group:'nodes', data: { id: tail }});
-        graph[tail].forEach(function(neighbour) {
-            var head   = neighbour[0];
-            var cost   = neighbour[1];
-            
-            elements.push({group:'edges', data: { source: tail, target: head, cost: cost }});
-            addRow(tail, head, cost);
-        });
+function enableEdgeControl(ele) {
+    let ref = ele.popperRef();
+    ele.tippy = tippy(ref, {
+        content: () => {
+            return weightInput;
+        },
+        trigger: "manual",
+        arrow: false,
+        placement: "top",
+        theme: 'tomato',
+        distance: '-25',
+        hideOnClick: false,
+        multiple: true,
+        sticky: true,
+        interactive: true
     });
+    ele.tippy.show();
+}
+
+function initializeWeightInputUI() {
+    weightInput = document.createElement('div');
+    buttonMinus = document.createElement('button');
+    buttonPlus  = document.createElement('button');
+    numberInput = document.createElement('input');
     
-    nodeId = Object.keys(graph).length;    
-    render(elements);
+    weightInput.className = 'number-input';
+    buttonPlus.className  = 'plus';
+    buttonMinus.onclick   = stepDown;    
+    buttonPlus.onclick    = stepUp;
+    numberInput.className = 'quantity';
+    numberInput.id        = 'weight';
+    numberInput.type      = 'number';
+    numberInput.value     = '1';
+    
+    weightInput.appendChild(buttonMinus);
+    weightInput.appendChild(numberInput);
+    weightInput.appendChild(buttonPlus);
+}
+
+function stepDown() {
+    var value = parseInt(numberInput.value);
+    numberInput.value = --value;
+}
+
+function stepUp() {
+    var value = parseInt(numberInput.value);
+    numberInput.value = ++value;
 }
 
 function center() {
     cy.center();
+}
+
+function addNode(id) {
+    cy.add([
+        { group:'nodes', data: { id: id } }
+    ]);
+}
+
+function paint(id, color) {
+    //cy.nodes(`[id = "${id}"]`).style('background-color', color);
+    cy.$('#' + id).animation({
+        style: {
+            'background-color': color
+        },
+        duration: 1000
+    }).play();
 }
 
 window.loadGraph = function loadGraph() {
@@ -329,10 +272,14 @@ window.editMode = function editMode() {
 var graph = {};
 var cy, eh;
 var isEditMode = false;
+var weightControl = false;
 var nodeId = 0;
 var selectedNodeCounter = 0;
+var selectedEdge;
 var selectedTailNode;
 var selectedHeadNode;
 var table = document.getElementById("graph_table");
+var weightInput, buttonMinus, buttonPlus, numberInput;
 
+initializeWeightInputUI();
 render([]);

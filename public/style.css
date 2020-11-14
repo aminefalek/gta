@@ -1,4 +1,7 @@
+html,
 body {
+    width: 100%;
+    height: 100%;
     margin: 0;
     overflow-x: hidden;
 }
@@ -70,8 +73,11 @@ button:focus {
 #sidebar-left {
     min-width: 20%;
     max-width: 60%;
-    height: 100vh;
+    min-height: 100%;
+    max-height: 100%;
     margin-left: 0%;
+    display: flex;
+    flex-flow: column;
     background: rgb(0, 0, 0);
     color: #fff;
     box-shadow: 4px 0px 4px -6px black;
@@ -83,7 +89,8 @@ button:focus {
     margin-right: 0;
     min-width: 20%;
     max-width: 20%;
-    height: 100vh;
+    min-height: 100%;
+    max-height: 100%;
     background: #fff;
     color: #000;
     box-shadow: -4px 0px 4px -6px black;
@@ -184,12 +191,13 @@ button:focus {
 }
 
 #console {
-    width: 100%;
+    flex: 1;
+    overflow-y: scroll;
+    resize: none;
     margin: 0 auto;
+    top: 0 auto;
     bottom: 0;
-    left: 0;
     background-color: black;
-    overflow: hidden;
     padding: 0.5rem;
     color: white;
     border-color: transparent;
@@ -238,6 +246,11 @@ button:focus {
     padding: 10px;
 }
 
+.disable {
+    color: grey;
+    background-color: #ccc;
+}
+
 .vertex-input {
     float: right;
     max-width: 100px;
@@ -282,4 +295,91 @@ button:focus {
     margin-top: auto;
     margin-bottom: 10px;
     z-index: 10;
+}
+
+#edge-weight-input {
+    width: 50px;
+    border: none;
+    border-width: 0;
+    box-shadow: none;
+    outline: none;
+}
+
+.tippy-tooltip.tomato-theme {
+    background-color: transparent;
+    color: yellow;
+}
+
+.tippy-tooltip.tomato-theme[data-animatefill] {
+    background-color: transparent;
+}
+
+.tippy-tooltip.tomato-theme .tippy-backdrop {
+    background-color: transparent;
+}
+
+input[type="number"] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+.number-input {
+    border: 0;
+    display: inline-flex;
+    align-items: center;
+}
+
+.number-input,
+.number-input * {
+    box-sizing: border-box;
+}
+
+.number-input button {
+    outline: none;
+    -webkit-appearance: none;
+    background-color: white;
+    border: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+    margin: 0;
+    position: relative;
+    box-shadow: 0px 0px 1px tomato;
+    border-radius: 50%;
+}
+
+.number-input button:before,
+.number-input button:after {
+    display: inline-block;
+    position: absolute;
+    content: "";
+    width: 1rem;
+    height: 2px;
+    background-color: tomato;
+    transform: translate(-50%, -50%);
+}
+.number-input button.plus:after {
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.number-input input[type="number"] {
+    font-family: sans-serif;
+    max-width: 3rem;
+    outline: none;
+    border: none;
+    border-width: 0 2px;
+    font-size: 1.5rem;
+    height: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 20px;
+    color: tomato;
 }
