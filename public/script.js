@@ -109,6 +109,7 @@ function render(elements) {
                         { group:'nodes', data: { id: nodeId }, renderedPosition: cyEvent.renderedPosition }
                     ]);
                     graph[nodeId++] = [];
+                    updateVerticesList();                    
                 }                
             } else if (target.isEdge() && !selectedEdge) {
                 selectedEdge = target;
@@ -131,6 +132,7 @@ function render(elements) {
                 var target = cyEvent.target;
                 if(target != cy) {
                     cy.remove(cy.$('#' + target.id()));
+                    updateVerticesList();
                 }
             }
             
@@ -215,6 +217,22 @@ function initializeWeightInputUI() {
     weightInput.appendChild(buttonPlus);
 }
 
+function updateVerticesList() {
+    for (i = vertexSelect.options.length-1; i >= 0; i--) {
+        vertexSelect.options[i] = null;
+    }
+    var option = document.createElement("option");
+    option.text = '';
+    vertexSelect.add(option);
+    cy.nodes().forEach(node => {
+        if (parseInt(node.id()) >= 0) {
+            var option = document.createElement("option");
+            option.text = node.id();
+            vertexSelect.add(option);
+        }
+    });
+}
+
 function stepDown() {
     var value = parseInt(numberInput.value);
     numberInput.value = --value;
@@ -226,7 +244,12 @@ function stepUp() {
 }
 
 function center() {
-    cy.center();
+    var id = vertexSelect.value;
+    if (id === '') {
+        cy.center();
+    } else {
+        cy.center(cy.$('#' + id));
+    }    
 }
 
 function addNode(id) {
@@ -255,7 +278,6 @@ window.loadGraph = function loadGraph() {
 window.clearGraph = function clearGraph() {
     cy.elements().remove();
     graph = {};
-    resetTable();
     nodeId = 0;
 }
 
@@ -278,7 +300,7 @@ var selectedNodeCounter = 0;
 var selectedEdge;
 var selectedTailNode;
 var selectedHeadNode;
-var table = document.getElementById("graph_table");
+const vertexSelect = document.getElementById("vertex-select");
 var weightInput, buttonMinus, buttonPlus, numberInput;
 
 initializeWeightInputUI();

@@ -290,11 +290,18 @@ button:focus {
 }
 
 #center-canvas {
+    display: inline-flex;
+    align-items: center;
     font-size: 25px;
     color: mediumslateblue;
     margin-top: auto;
     margin-bottom: 10px;
     z-index: 10;
+}
+
+#center-canvas select {
+    margin-left: 5px;
+    width: 60px;
 }
 
 #edge-weight-input {
