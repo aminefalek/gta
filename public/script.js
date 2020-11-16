@@ -88,6 +88,8 @@ function render(elements) {
             cols: 2
         },
         elements: elements,
+        boxSelectionEnabled: true,
+        selectionType : 'single',
         style: cyStyle
     });
     cy.layout(options);
@@ -95,9 +97,11 @@ function render(elements) {
     
     // add node using left mouse click
     cy.on('click', function(cyEvent){
-        if (isEditMode) {
-            var target = cyEvent.target;
+        var target = cyEvent.target;
 
+        resetSelection();
+        
+        if (isEditMode) {
             if (target === cy) {
                 if (selectedEdge) {
                     selectedEdge.data('cost', numberInput.value == '' ? 1: numberInput.value);
@@ -131,7 +135,16 @@ function render(elements) {
             } else {
                 var target = cyEvent.target;
                 if(target != cy) {
-                    cy.remove(cy.$('#' + target.id()));
+                    if (cy.$(':selected').length > 0 && cy.$(':selected').contains(target)) {
+                        cy.$(':selected').forEach(element => {
+                            delete graph[element.id()];
+                        });
+                        cy.remove(cy.$(':selected'));
+                    }
+                    else {
+                        cy.remove(cy.$('#' + target.id()));
+                        delete graph[target.id()];
+                    }
                     updateVerticesList();
                 }
             }
@@ -144,6 +157,12 @@ function render(elements) {
             event.target.tippy.destroy();
         }        
         setTimeout(function(){ eh.hide(); }, 1500);
+    });
+
+    cy.on('boxselect', 'node', function(event) {
+        var target = event.target;
+        target.style( { 'background-color' : 'tomato' });
+        target.select();
     });
 
     // add edge using node handle
@@ -170,6 +189,11 @@ function render(elements) {
             graph[sourceNode.id()].push([targetNode.id(), 1]);
         },
     });
+}
+
+function resetSelection() {
+    cy.$(':selected').style( { 'background-color' : 'black' });
+    cy.$(':selected').unselect();
 }
 
 function resetEdgeStyle(edge) {
@@ -258,14 +282,32 @@ function addNode(id) {
     ]);
 }
 
-function paint(id, color) {
-    //cy.nodes(`[id = "${id}"]`).style('background-color', color);
-    cy.$('#' + id).animation({
+function paint_vertex(id, color, timeout=null) {
+    console.log('test');
+    cy.$(`#${id}`).animation({
         style: {
             'background-color': color
         },
-        duration: 1000
+        duration: 100
     }).play();
+
+    if (timeout) {
+        setTimeout(function(){ cy.nodes(`[id = "${id}"]`).style('background-color', 'black'); }, timeout);
+    }
+}
+
+function print_edge(source, target, color, timeout=null) {
+    var edge = cy.elements(`edge[source = "${source}"][target = "${target}"]`);
+    edge.animation({
+        style: {
+            'line-color': color,
+            'target-arrow-color': color
+        }
+    }).play();
+
+    if (timeout) {
+        setTimeout(function(){ resetEdgeStyle(edge) }, timeout);
+    }
 }
 
 window.loadGraph = function loadGraph() {
