@@ -32,40 +32,18 @@ slider.addEventListener('change',function() {
 });
 
 // Toggle run/pause button icon in control panel
-/* runButton.onclick = function() {
-    pypyjs.exec(
-        // Run some Python
-`
-import time
-y = 10
-time.sleep(1000)
-print('test1')
-time.sleep(1000)
-print('test2')
-time.sleep(1000)
-print('test3')
-`
-      ).then(function() {
-        // Transfer the value of y from Python to JavaScript
-        return pypyjs.get('y');
-      }).then(function(result) {
-        // Display an alert box with the value of y in it
-        console.log(result);
-      });
-}; */
+runButton.onclick = function() {
+    runButton.firstChild.classList.toggle('fa-pause');
+}
 
 // Toggle run/pause button icon in control panel
 stepButton.onclick = function() {
     step++;
 };
 
-function sleep(milliseconds) {
-    const date = Date.now();
-    let currentDate = null;
-    do {
-      currentDate = Date.now();
-    } while (currentDate - date < milliseconds);
-  }
+async function clearConsole() {
+    textArea.value = '';
+}
 
 // Toggle right sidebar with transition animation
 collapseRight.onclick = function() {
