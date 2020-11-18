@@ -39,7 +39,7 @@
         <link rel="stylesheet" href="https://unpkg.com/tippy.js@4.0.1/index.css" />
     </head>
 
-    <body onload="brython()">
+    <body onload="brython(1)">
         <div id="whiteboard"></div>
         <div class="wrapper d-flex align-items-stretch">
 
@@ -61,10 +61,10 @@
                 <div id="control">
                     <div class="btn-group">
                         <button id="run-button" type="button" class="btn btn-light btn-sm"><i class="fa fa-play"></i></button>
-                        <button type="button" class="btn btn-light btn-sm"><i class="fa fa-step-forward"></i></button>
-                        <button type="button" class="btn btn-light btn-sm"><i class="fa fa-stop"></i></button>
+                        <button id="step-button" type="button" class="btn btn-light btn-sm"><i class="fa fa-step-forward"></i></button>
+                        <button id="stop-button" type="button" class="btn btn-light btn-sm"><i class="fa fa-stop"></i></button>
                     </div>
-                    <input type="range" class="custom-range" id="speedControl">
+                    <input id="slider" type="range" class="custom-range" value="1" min="0" max="3" step="0.05">
                 </div>                
 
                 <!-- Console -->

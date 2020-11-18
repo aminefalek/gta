@@ -241,6 +241,10 @@ button:focus {
     align-items: center;
 }
 
+#slider {
+    margin: 0;
+}
+
 #accordion {
     margin-top: 20px;
     padding: 10px;
