@@ -12,11 +12,14 @@ var step = 0;
 
 const codeMirror = CodeMirror(navbar, {
     value: 
-`print(len(GRAPH))
-for i in range(len(GRAPH)):
-    print(i)
-    paint_vertex(i, 'yellow', 5000)`,
-    
+`for v in GRAPH:
+    print('vertex: ' + v)
+    window.paint_vertex(v, 'yellow', 10000)
+    for edge in GRAPH[v]:
+        w = edge['head']
+        print('edge: ({}, {})'.format(v, w))
+        window.paint_edge(v, w, 'blue', 10000)`,
+
     mode: "python",
     theme: "monokai",
     indentUnit: 4,

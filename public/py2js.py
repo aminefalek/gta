@@ -61,6 +61,7 @@ for node in window.graph:
 def run(event):
     code = format(document.querySelector(
         ".CodeMirror").CodeMirror.getValue(), document["slider"].attrs['value'])
+
     exec(code)
 
 

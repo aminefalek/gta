@@ -296,7 +296,7 @@ function paint_vertex(id, color, timeout=null) {
     }
 }
 
-function print_edge(source, target, color, timeout=null) {
+function paint_edge(source, target, color, timeout=null) {
     var edge = cy.elements(`edge[source = "${source}"][target = "${target}"]`);
     edge.animation({
         style: {
