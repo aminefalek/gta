@@ -64,7 +64,7 @@ button:focus {
 }
 .resizer[data-direction="vertical"] {
     cursor: ns-resize;
-    position: absolute;
+    position: relative;
     min-height: 5px;
     max-height: 5px;
     width: 100%;
@@ -192,12 +192,12 @@ button:focus {
 
 #console {
     flex: 1;
-    overflow-y: scroll;
     resize: none;
+    overflow-y: scroll;
     margin: 0 auto;
     top: 0 auto;
     bottom: 0;
-    background-color: black;
+    background-color: #33485e;
     padding: 0.5rem;
     color: white;
     border-color: transparent;
