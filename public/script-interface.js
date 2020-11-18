@@ -5,20 +5,64 @@ const sidebarRight  = document.getElementById("sidebar-right");
 const collapseLeft  = document.getElementById("collapse-left");
 const collapseRight = document.getElementById("collapse-right");
 const runButton     = document.getElementById('run-button');
+const stepButton    = document.getElementById('step-button');
+const slider        = document.getElementById('slider');
 const textArea      = document.getElementById('console');
+var step = 0;
 
 const codeMirror = CodeMirror(navbar, {
-    value:"def example():\n\tprint(\"Hello, world!\")\n\nexample()",
+    value: 
+`print(len(GRAPH))
+for i in range(len(GRAPH)):
+    print(i)
+    paint_vertex(i, 'yellow', 5000)`,
+    
     mode: "python",
     theme: "monokai",
+    indentUnit: 4,
     lineNumbers:true
 });
 codeMirror.setSize("100%", "100%");
 
+slider.addEventListener('change',function() {
+    this.setAttribute('value',this.value);
+});
+
 // Toggle run/pause button icon in control panel
 /* runButton.onclick = function() {
-    runButton.firstChild.classList.toggle('fa-pause');
+    pypyjs.exec(
+        // Run some Python
+`
+import time
+y = 10
+time.sleep(1000)
+print('test1')
+time.sleep(1000)
+print('test2')
+time.sleep(1000)
+print('test3')
+`
+      ).then(function() {
+        // Transfer the value of y from Python to JavaScript
+        return pypyjs.get('y');
+      }).then(function(result) {
+        // Display an alert box with the value of y in it
+        console.log(result);
+      });
 }; */
+
+// Toggle run/pause button icon in control panel
+stepButton.onclick = function() {
+    step++;
+};
+
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+  }
 
 // Toggle right sidebar with transition animation
 collapseRight.onclick = function() {
