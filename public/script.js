@@ -152,11 +152,15 @@ function render(elements) {
         }
     });
 
+    cy.on('mouseover', 'node', function(event) {
+        clearTimeout(timer);
+    });
+
     cy.on('mouseout', 'node', function(event) {
         if (event.target.tippy) {
             event.target.tippy.destroy();
         }        
-        setTimeout(function(){ eh.hide(); }, 1500);
+        timer = setTimeout(function(){ eh.hide(); }, 1500);
     });
 
     cy.on('boxselect', 'node', function(event) {
@@ -170,6 +174,7 @@ function render(elements) {
         preview: false,
         toggleOffOnLeave: false,
         handleNodes: "node",
+        hoverDelay: 100,
         snap: true,
         snapThreshold: 20,
         snapFrequency: 15,
@@ -335,6 +340,7 @@ window.editMode = function editMode() {
 
 var graph = {};
 var cy, eh;
+var timer;
 var isEditMode = false;
 var weightControl = false;
 var nodeId = 0;
