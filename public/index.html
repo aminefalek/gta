@@ -73,11 +73,16 @@
 
             <!-- Horizontal control resizer -->
             <div class="resizer" data-direction="horizontal"></div>
-            <div type="button" id="center-canvas">
-                <i class="fa fa-crosshairs" onclick="center()"></i>
-                <select id="vertex-select" class="form-control form-control-sm">
-                    <option></option>
+
+            <div id="center-canvas" class="input-group-sm">
+                <select class="custom-select" id="vertex-select">
+                    <option selected>graph</option>
                 </select>
+                <div class="input-group-append">
+                    <button class="btn btn-secondary btn-sm" onclick="center()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Right sidebar --> 

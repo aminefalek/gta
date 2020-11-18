@@ -251,10 +251,10 @@ function updateVerticesList() {
         vertexSelect.options[i] = null;
     }
     var option = document.createElement("option");
-    option.text = '';
+    option.text = 'graph';
     vertexSelect.add(option);
     cy.nodes().forEach(node => {
-        if (parseInt(node.id()) >= 0) {
+        if (isFinite(node.id())) {
             var option = document.createElement("option");
             option.text = node.id();
             vertexSelect.add(option);
@@ -274,7 +274,7 @@ function stepUp() {
 
 function center() {
     var id = vertexSelect.value;
-    if (id === '') {
+    if (id === 'graph') {
         cy.center();
     } else {
         cy.center(cy.$('#' + id));
