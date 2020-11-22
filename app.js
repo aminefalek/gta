@@ -26,7 +26,7 @@ app.post('/api', (request, response) => {
         var name  = request.body['name'];
         var graph = request.body['data'];
         
-        graphs[name] = data;
+        graphs[name] = graph;
         saveGraph(name, graph);
     }
 });
@@ -36,9 +36,11 @@ function saveGraph(name, graph) {
     var fs = require('fs')
     var file = fs.createWriteStream(path + name + '.txt', {flags: 'w'});
 
-    flags.write('some data') // append string to your file
-    flags.write('more data') // again
-    flags.write('and more') // again
+    for (var i=0; i<Object.keys(graph).length; i++) {
+        graph[i].forEach(edge => {
+            file.write(edge.join() + '\r\n');
+        });
+    }
 }
 
 function loadGraphs() {

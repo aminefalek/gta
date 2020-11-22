@@ -407,6 +407,22 @@ window.clearGraph = function clearGraph() {
     nodeId = 0;
 }
 
+async function saveGraph() {
+    console.log(graph);
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({'type':'save', 'name': document.getElementById("save_input").value, 'data': graph})
+    };
+    
+    const response = await fetch('/api', options);
+    var done = await response.json();
+    
+    sendGraphNamesRequest();
+}
+
 var graph = {};
 var cy, eh;
 var timer;
