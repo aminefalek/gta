@@ -1,28 +1,28 @@
 /*------------------------------ Style ------------------------------*/
 
-var cyStyle = [
+const STYLE = [
     {
-      selector: 'node',
-      style: {
-        'width': '1.5em',
-        'height': '1.5em',
-        'border-width': 3,
-        'border-color': 'black',
-        'background-color': 'black',
-        'label': 'data(id)'
-      }
+        selector: 'node',
+        style: {
+            'width': '1.5em',
+            'height': '1.5em',
+            'border-width': 3,
+            'border-color': 'black',
+            'background-color': 'black',
+            'label': 'data(id)'
+        }
     },
     {
-      selector: 'edge',
-      style: {
-        'width': 3,
-        'color': '#666666',
-        'line-color': '#666666',
-        'target-arrow-color': '#666666',
-        'target-arrow-shape': 'triangle',
-        'label': 'data(cost)',
-        'curve-style': 'bezier',
-        'text-margin-y': -10
+        selector: 'edge',
+        style: {
+            'width': 3,
+            'color': '#666666',
+            'line-color': '#666666',
+            'target-arrow-color': '#666666',
+            'target-arrow-shape': 'triangle',
+            'label': 'data(cost)',
+            'curve-style': 'bezier',
+            'text-margin-y': -10
       }
     },
     {
@@ -70,29 +70,21 @@ var cyStyle = [
     }
 ];
 
-let options = {
-    name: 'cose',
-    animate: false,
-    nodeSep: 20,
-    idealEdgeLength: 10
+const LAYOUT = {
+    name: 'circle',
 };
 
 /*---------------------------- Functions ----------------------------*/
 
-function render(elements) {
+function initialize() {
     cy = cytoscape({
         container: document.getElementById('whiteboard'),
-        layout: {
-            name: "grid",
-            rows: 2,
-            cols: 2
-        },
-        elements: elements,
+        elements: [],
         boxSelectionEnabled: true,
         selectionType : 'single',
-        style: cyStyle
+        style: STYLE
     });
-    cy.layout(options);
+    cy.layout(LAYOUT);
     cy.userZoomingEnabled(false);
     
     // add node using left mouse click
@@ -194,6 +186,7 @@ function render(elements) {
             graph[sourceNode.id()].push([targetNode.id(), 1]);
         },
     });
+    eh.disable();
 }
 
 function resetSelection() {
@@ -335,7 +328,83 @@ window.editMode = function editMode() {
     }
     else {
         eh.disable();
+        resetEdgeStyle(selectedEdge);
+        selectedEdge.tippy.destroy();
+        selectedEdge = null;
     }
+}
+
+function drawGraph() {
+    var elements = [];
+    
+    Object.keys(graph).forEach(function(tail) {
+        elements.push({group:'nodes', data: { id: tail }});
+        graph[tail].forEach(function(neighbour) {
+            var head = neighbour[0];
+            var cost = neighbour[1];
+            
+            elements.push({group:'edges', data: { source: tail, target: head, cost: cost }});
+        });
+    });    
+    nodeId = Object.keys(graph).length;
+
+    cy.elements().remove();
+    cy.add(elements);
+    var layout = cy.elements().makeLayout(LAYOUT);
+    layout.run();
+}
+
+async function sendGraphNamesRequest() {
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({'type':'graph_names'})
+    };
+    
+    const response = await fetch('/api', options);
+    var graphNames = await response.json();
+    
+    var dropdown = document.getElementById("dropdown");
+    
+    graphNames.forEach(function(name) {
+        var option = document.createElement("option");
+        option.text = name;
+        dropdown.add(option);
+    });
+    
+    dropdown.value = graphNames[0];
+}
+
+async function sendGraphRequest(name) {
+    if (name == '') {
+        return;
+    }
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({'type':'graph', 'name': name})
+    };
+    
+    const response = await fetch('/api', options);
+    graph = await response.json();
+    drawGraph();
+}
+
+window.loadGraph = function loadGraph() {
+    var dropdown = document.getElementById("dropdown");
+    var graphName = dropdown.options[dropdown.selectedIndex].text;
+    
+    sendGraphRequest(graphName);
+}
+
+window.clearGraph = function clearGraph() {
+    cy.elements().remove();
+    graph = {};
+    nodeId = 0;
 }
 
 var graph = {};
@@ -352,4 +421,5 @@ const vertexSelect = document.getElementById("vertex-select");
 var weightInput, buttonMinus, buttonPlus, numberInput;
 
 initializeWeightInputUI();
-render([]);
+sendGraphNamesRequest();
+initialize();

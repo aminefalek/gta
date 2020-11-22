@@ -45,28 +45,54 @@ async function clearConsole() {
     textArea.value = '';
 }
 
-// Toggle right sidebar with transition animation
-collapseRight.onclick = function() {
+
+
+function collapseRightSidebar() {
+    sidebarRight.style.marginRight = -sidebarRight.clientWidth + 'px';
+}
+
+function openRightSidebar() {
+    sidebarRight.style.marginRight = '0px';
+}
+
+function toggleRightSidebar() {
     var offset = window.innerWidth - (sidebarRight.offsetLeft + sidebarRight.clientWidth);
     if (offset < 0) {
-        sidebarRight.style.marginRight = '0px';
+        openRightSidebar();
+    } else {
+        collapseRightSidebar();
     }
+}
+
+function collapseLeftSidebar() {
+    sidebarLeft.style.marginLeft = -sidebarLeft.clientWidth + 'px';
+}
+
+function openLeftSidebar() {
+    sidebarLeft.style.marginLeft = '0px';
+}
+
+function toggleLeftSidebar() {
+    sidebarLeft.classList.add('transition');
+    if (sidebarLeft.offsetLeft < 0) {
+        openLeftSidebar();
+    } 
     else {
-        sidebarRight.style.marginRight = -sidebarRight.clientWidth + 'px';
+        collapseLeftSidebar();
     }
+}
+
+// Toggle right sidebar with transition animation
+collapseRight.onclick = function() {
+    toggleRightSidebar();
 };
 
 // Toggle left sidebar with transition animation
 collapseLeft.onclick = function() {
-    sidebarLeft.classList.add('transition');
-    if (sidebarLeft.offsetLeft < 0) {
-        sidebarLeft.style.marginLeft = '0px';
-    } 
-    else {
-        sidebarLeft.style.marginLeft = -sidebarLeft.clientWidth + 'px';
-    }
+    toggleLeftSidebar();
 };
 
+// Control vertical and horizontal resizers
 document.addEventListener('DOMContentLoaded', function() {
     const resizable = function(resizer) {
         const direction   = resizer.getAttribute('data-direction') || 'horizontal';
@@ -152,7 +178,3 @@ document.addEventListener('DOMContentLoaded', function() {
         resizable(ele);
     });
 });
-
-function clearConsole() {
-    textArea.value = '';
-}

@@ -6,9 +6,13 @@ body {
     overflow-x: hidden;
 }
 
-.wrapper {
-    width: 100%;
+.d-flex {
+    display: -webkit-box !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
 }
+
+/* Whiteboard area and contents */
 
 #whiteboard {
     width: 100%;
@@ -16,6 +20,8 @@ body {
     position: absolute;
     background-color: transparent;
 }
+
+/* Sidebars */
 
 .btn {
     margin-right: 2px;
@@ -35,12 +41,6 @@ body {
     color: #fff;
     background-color: #000000;
     border-color: #000000;
-}
-
-.d-flex {
-    display: -webkit-box !important;
-    display: -ms-flexbox !important;
-    display: flex !important;
 }
 
 button:focus {
@@ -75,7 +75,7 @@ button:focus {
     max-width: 60%;
     min-height: 100%;
     max-height: 100%;
-    margin-left: 0%;
+    margin-left: -20%;
     display: flex;
     flex-flow: column;
     background: rgb(0, 0, 0);
@@ -250,9 +250,16 @@ button:focus {
     padding: 10px;
 }
 
-.disable {
+.btn.btn-secondary[disabled] {
     color: grey;
     background-color: #ccc;
+    border: 0;
+    pointer-events: none;
+}
+
+.disable {
+    color: grey;
+    background-color: red;
 }
 
 .vertex-input {
@@ -402,4 +409,39 @@ input[type="number"]::-webkit-outer-spin-button {
 #console::-webkit-scrollbar-thumb {
     background-color: white;
     border-radius: 10px;
+}
+
+.effect-1 {
+    position: relative;
+}
+.effect-1::before,
+.effect-1::after {
+    z-index: -1;
+    position: absolute;
+    content: "";
+    bottom: 15px;
+    left: 10px;
+    width: 50%;
+    top: 80%;
+    max-width: 300px;
+    background: #aaa;
+    box-shadow: 0 15px 10px #aaa;
+    transform: rotate(-3deg);
+}
+.effect-1::after {
+    transform: rotate(3deg);
+    right: 10px;
+    left: auto;
+}
+
+.player {
+    position: absolute;
+    top: 95%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    visibility: hidden;
+    width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px -6px black;
+    background-color: #f1f1f1;
 }

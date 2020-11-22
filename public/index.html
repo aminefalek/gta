@@ -4,7 +4,8 @@
         <title>GTA</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        
+        <link rel="icon" type="image/png" href="icons/network.svg" />
+
         <!-- Main Stylesheet-->
         <link rel="stylesheet" href="style.css">
 
@@ -37,12 +38,24 @@
         <script src="https://cdn.jsdelivr.net/npm/cytoscape-popper@1.0.4/cytoscape-popper.min.js"></script>
         <script src="https://unpkg.com/tippy.js@4.0.1/umd/index.all.min.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/tippy.js@4.0.1/index.css" />
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"
+                integrity="sha256-F/Xda58SPdcUCr+xhSGz9MA2zQBPb0ASEYKohl8UCHc=" crossorigin="anonymous"></script>
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/dreampulse/computer-modern-web-font/master/fonts.css">
     </head>
 
     <body onload="brython(1)">
         <div id="whiteboard"></div>
-        <div class="wrapper d-flex align-items-stretch">
-
+        <div class="player">                
+            <button type="button" class="btn"><i class="fa fa-backward"></i></button>
+            <button type="button" class="btn"><i class="fa fa-play"></i></button>
+            <button type="button" class="btn"><i class="fa fa-stop"></i></button>
+            <button type="button" class="btn"><i class="fa fa-forward"></i></button>  
+        </div>
+        <div class="d-flex align-items-stretch">
             <!-- Left sidebar -->
             <div id="sidebar-left">
                 <!-- Placeholder for CodeMirror -->
@@ -125,46 +138,8 @@
                             </div>
                         </div>
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="toggle" data-toggle="collapse" data-target="#edit-mode" aria-expanded="false" onclick="editMode()">
+                            <input type="checkbox" class="custom-control-input" id="toggle" onclick="editMode()">
                             <label class="custom-control-label" for="toggle"><h7 class="small font-italic text-muted">edit mode</h7></label>
-                        </div>
-                        <div class="collapse" id="edit-mode">
-                            <div class="card card-body border-danger">
-                                <ul class="list-unstyled">
-                                    <li class="media align-items-center">
-                                        <img src="icons/add-node.png" width="28" class="mr-3">
-                                        <div class="media-body">
-                                            <h7 class="mb-0">add vertex</h7>
-                                            <h7 class="small font-italic text-muted">left click</h7>
-                                        </div>
-                                    </li>
-                                    <li class="media align-items-center">
-                                        <img src="icons/remove-vertex.png" width="28" class="mr-3">
-                                        <div class="media-body">
-                                            <h7 class="mb-0">remove element</h7>
-                                            <h7 class="small font-italic text-muted">right click</h7>
-                                        </div>
-                                    </li>
-                                    <li class="media align-items-center">
-                                        <img src="icons/add-edge.png" width="28" class="mr-3">
-                                        <div class="media-body">
-                                            <h7 class="mb-0">add edge</h7>
-                                            <h7 class="small font-italic text-muted">hover vertex + drag from handle</h7>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <table class="table table-sm text-center" id="graph_table" hidden="true">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">tail</th>
-                                            <th scope="col">head</th>
-                                            <th scope="col">weight</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                                <button type="button" class="btn btn-link btn-sm" hidden="true" onclick="updateGraphWeights()">update</button>
-                            </div>
                         </div>
                     </div>
                     
@@ -184,12 +159,18 @@
                                                 <input class="custom-control-input" id="customRadio1" type="radio" name="customRadio">
                                                 <label class="custom-control-label" for="customRadio1">
                                                     <p class="mb-0">DFS
-                                                        <a href="#" class="badge disable">view</a>
-                                                        <a href="#" class="badge disable">code</a>
                                                     </p><span class="small font-italic text-muted">Depth First Search</span>
                                                 </label>
                                             </div>
-                                            <input for="customRadio1" class="form-control form-control-sm vertex-input" type="text" placeholder="source vertex">
+                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                <label class="btn btn-secondary btn-sm" disabled>
+                                                    <input type="radio" name="options" id="learn"> learn
+                                                </label>
+                                                <label class="btn btn-secondary btn-sm" disabled>
+                                                    <input type="radio" name="options" id="code"> code
+                                                </label>
+                                            </div>
+                                            
                                         </li>
                                         <li class="list-group-item d-flex align-items-center justify-content-between">
                                             <div class="custom-control custom-radio">
@@ -198,7 +179,14 @@
                                                     <p class="mb-0">BFS</p><span class="small font-italic text-muted">Breadth First Search</span>
                                                 </label>
                                             </div>
-                                            <input for="customRadio2" class="form-control form-control-sm vertex-input" type="text" placeholder="source vertex">
+                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                <label class="btn btn-secondary btn-sm" disabled>
+                                                    <input type="radio" name="options" id="learn"> learn
+                                                </label>
+                                                <label class="btn btn-secondary btn-sm" disabled>
+                                                    <input type="radio" name="options" id="code"> code
+                                                </label>
+                                            </div>
                                         </li>
                                     </ul>
                                 </div>
