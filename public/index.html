@@ -50,11 +50,11 @@
 
     <body onload="brython(1)">
         <div id="whiteboard"></div>
-        <div class="player">                
-            <button type="button" class="btn"><i class="fa fa-backward"></i></button>
-            <button type="button" class="btn"><i class="fa fa-play"></i></button>
-            <button type="button" class="btn"><i class="fa fa-stop"></i></button>
-            <button type="button" class="btn"><i class="fa fa-forward"></i></button>  
+        <div id="player" class="player">
+            <button type="button" class="btn"><i class="fa fa-backward" onclick="stepBackward()"></i></button>
+            <button type="button" class="btn"><i class="fa fa-play" onclick="play()"></i></button>
+            <button type="button" class="btn"><i class="fa fa-stop" onclick="stop()"></i></button>
+            <button type="button" class="btn"><i class="fa fa-forward" onclick="stepForward()"></i></button>  
         </div>
         <div class="d-flex align-items-stretch">
             <!-- Left sidebar -->
@@ -201,7 +201,9 @@
                 
             </nav>            
         </div>
-        
+
+        <script src="animation.js"></script>
+        <script src="algorithms.js"></script>
         <script src="script.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>

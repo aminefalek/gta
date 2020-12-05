@@ -67,7 +67,7 @@ function loadGraphs() {
                 var features  = edge.split(',');                
                 
                 var head = features[0];
-                var cost = features[1];
+                var cost = parseInt(features[1]);
                 
                 neighbours.push([head, cost]);                
             });

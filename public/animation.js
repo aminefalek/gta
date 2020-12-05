@@ -1,79 +1,79 @@
-var cy;
-var currentAnimationId = 0;
+var animationId = 0;
 
-var animationsForward;
-var animationsBackward;
+var forwardAnimations;
+var backwardAnimations;
 
-export function initializeAnimations(cy_) {
-    cy = cy_;
-    animationsForward  = [];
-    animationsBackward = [];
+function initializeAnimations() {
+    forwardAnimations  = [];
+    backwardAnimations = [];
 }
 
-export function queueAnimation(animF, animB) {
-    animationsForward.push(animF);
-    animationsBackward.push(animB);
+function queueAnimation(animF, animB) {
+    forwardAnimations.push(animF);
+    backwardAnimations.push(animB);
 }
 
-export function play() {
-    if (currentAnimationId < 0) {
-        currentAnimationId = 0;
-    } else if (currentAnimationId >= animationsForward.length) {
-        currentAnimationId = animationsForward.length -1 ;
+function play() {
+    if (animationId < 0) {
+        animationId = 0;
+        return;
+    } else if (animationId >= forwardAnimations.length) {
+        animationId = forwardAnimations.length -1 ;
         return;
     }
-    
-    console.log("animation: ", currentAnimationId);
-    animationsForward[currentAnimationId].play().promise().then(function () {
-        currentAnimationId++;
+
+    forwardAnimations[animationId].play().promise().then(function () {
+        animationId++;
         play();
     });
 }
 
-export function pause() {
-    animationsForward[currentAnimationId].pause();
+function pause() {
+    forwardAnimations[animationId].pause();
 }
 
-export function stop() {
-    animationsForward[currentAnimationId].stop();
+function stop() {
+    forwardAnimations[animationId].stop();
     cy.nodes().style( { 'background-color' : 'black' });
     cy.edges().style( { 'line-color' : '#ccc', 'target-arrow-color': '#ccc'});
-    currentAnimationId = 0;
+    animationId = 0;
 }
 
-export function stepForward() {
-    if (currentAnimationId == animationsForward.length) {
+function stepForward() {
+    if (animationId == forwardAnimations.length) {
         return;
     }
     
     pause();
-    animationsForward[currentAnimationId++].progress(0.99).apply();
+    forwardAnimations[animationId++].progress(0.99).apply();
 }
 
-export function stepBackward() {
-    if (currentAnimationId <= 0) {
+function stepBackward() {
+    if (animationId <= 0) {
         return;
     }
-    animationsBackward[--currentAnimationId].progress(0).apply();
+    backwardAnimations[--animationId].progress(0).apply();
 }
 
-export function highlightNode(id, color) {
-    var animF = cy.$('#' + id).animation({
-                        style: {
-                            'background-color': color
-                        }
-                    });
+function highlightNode(id, color) {
+    var animF = cy.$(`#${id}`).animation({
+        style: {
+            'background-color': color
+        },
+        duration: 500
+    });
     
-    var animB = cy.$('#' + id).animation({
-                        style: {
-                            'background-color': 'black'
-                        }
-                    });
+    var animB = cy.$(`#${id}`).animation({
+        style: {
+            'background-color': 'black'
+        },
+        duration: 500
+    });
     
     queueAnimation(animF, animB);
 }
 
-export function highlightNodeBorder(id, color) {
+function highlightNodeBorder(id, color) {
     var animF = cy.$('#' + id).animation({
                         style: {
                             'border-color': color
@@ -89,20 +89,24 @@ export function highlightNodeBorder(id, color) {
     queueAnimation(animF, animB);
 }
 
-export function highlightEdge(tail, head, color) {
-    var animF = cy.elements(`edge[source = "${tail}"][target = "${head}"]`).animation({
-                        style: {
-                            'line-color': color,
-                            'target-arrow-color': color
-                        }
-                    });
+function highlightEdge(tail, head, color) {
+    var edge = cy.elements(`edge[source = "${tail}"][target = "${head}"]`);
     
-    var animB = cy.elements(`edge[source = "${tail}"][target = "${head}"]`).animation({
-                        style: {
-                            'line-color': '#ccc',
-                            'target-arrow-color': '#ccc'
-                        }
-                    });
+    var animF = edge.animation({
+        style: {
+            'line-color': color,
+            'target-arrow-color': color
+        },
+        duration: 500
+    });
+    
+    var animB = edge.animation({
+        style: {
+            'line-color': '#ccc',
+            'target-arrow-color': '#ccc'
+        },
+        duration: 500
+    });
     
     queueAnimation(animF, animB);
 }

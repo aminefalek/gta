@@ -427,7 +427,6 @@ window.center = function center() {
     } else {
         cy.center(cy.$('#' + id));
     }
-    dijkstra(cy, graph, 0);
 }
 
 var graph = {};
@@ -444,6 +443,7 @@ const VERTEX_SELECTION_UI = document.getElementById("vertex-select");
 const RADIO_BUTTONS_UI    = document.getElementsByName('algorithms');
 const NAVBAR_UI           = document.getElementById("navbar");
 const CONTROL_UI          = document.getElementById("control");
+const PLAYER_UI           = document.getElementById("player");
 const SIDEBAR_LEFT_UI     = document.getElementById("sidebar-left");
 const SIDEBAR_RIGHT_UI    = document.getElementById("sidebar-right");
 const COLLAPSE_LEFT_UI    = document.getElementById("collapse-left");
@@ -628,6 +628,9 @@ LEARN_BUTTON_UI.className = 'badge badge-primary';
 LEARN_BUTTON_UI.onclick = function() {
     collapseRightSidebar();
     collapseLeftSidebar();
+    PLAYER_UI.style.visibility = 'visible';
+    dijkstra(graph, '0');
+
 }
 
 const CODE_BUTTON_UI = document.createElement("a");
