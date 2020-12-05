@@ -1,5 +1,3 @@
-/*------------------------------ Style ------------------------------*/
-
 const STYLE = [
     {
         selector: 'node',
@@ -72,9 +70,8 @@ const STYLE = [
 
 const LAYOUT = {
     name: 'circle',
+    animate: false,
 };
-
-/*---------------------------- Functions ----------------------------*/
 
 function initialize() {
     cy = cytoscape({
@@ -82,10 +79,10 @@ function initialize() {
         elements: [],
         boxSelectionEnabled: true,
         selectionType : 'single',
+        zoomingEnabled: false,
         style: STYLE
     });
     cy.layout(LAYOUT);
-    cy.userZoomingEnabled(false);
     
     // add node using left mouse click
     cy.on('click', function(cyEvent){
@@ -240,17 +237,17 @@ function initializeWeightInputUI() {
 }
 
 function updateVerticesList() {
-    for (i = vertexSelect.options.length-1; i >= 0; i--) {
-        vertexSelect.options[i] = null;
+    for (i = VERTEX_SELECTION_UI.options.length-1; i >= 0; i--) {
+        VERTEX_SELECTION_UI.options[i] = null;
     }
     var option = document.createElement("option");
     option.text = 'graph';
-    vertexSelect.add(option);
+    VERTEX_SELECTION_UI.add(option);
     cy.nodes().forEach(node => {
         if (isFinite(node.id())) {
             var option = document.createElement("option");
             option.text = node.id();
-            vertexSelect.add(option);
+            VERTEX_SELECTION_UI.add(option);
         }
     });
 }
@@ -265,15 +262,6 @@ function stepUp() {
     numberInput.value = ++value;
 }
 
-function center() {
-    var id = vertexSelect.value;
-    if (id === 'graph') {
-        cy.center();
-    } else {
-        cy.center(cy.$('#' + id));
-    }    
-}
-
 function addNode(id) {
     cy.add([
         { group:'nodes', data: { id: id } }
@@ -281,7 +269,6 @@ function addNode(id) {
 }
 
 function paint_vertex(id, color, timeout=null) {
-    console.log('test');
     cy.$(`#${id}`).animation({
         style: {
             'background-color': color
@@ -308,28 +295,38 @@ function paint_edge(source, target, color, timeout=null) {
     }
 }
 
-window.loadGraph = function loadGraph() {
-    var dropdown = document.getElementById("dropdown");
-    var graphName = dropdown.options[dropdown.selectedIndex].text;
-    
+function loadGraph() {
+    var graphName = GRAPH_DROPDOWN_UI.options[GRAPH_DROPDOWN_UI.selectedIndex].text;    
     sendGraphRequest(graphName);
 }
 
-window.clearGraph = function clearGraph() {
+function clearGraph() {
     cy.elements().remove();
     graph = {};
     nodeId = 0;
 }
 
-window.editMode = function editMode() {
+function editMode() {
     isEditMode = !isEditMode;
+    
     if (isEditMode) {
         eh.enable();
+        for(i = 0; i < RADIO_BUTTONS_UI.length; i++) {
+            RADIO_BUTTONS_UI[i].disabled = true;
+            RADIO_BUTTONS_UI[i].checked = false;
+        };
+        LEARN_BUTTON_UI.hidden = true;
+        CODE_BUTTON_UI.hidden = true;
     }
     else {
         eh.disable();
+        for(i = 0; i < RADIO_BUTTONS_UI.length; i++) {
+            RADIO_BUTTONS_UI[i].disabled = false;
+        };
         resetEdgeStyle(selectedEdge);
-        selectedEdge.tippy.destroy();
+        if (selectedEdge) {
+            selectedEdge.tippy.destroy();
+        }
         selectedEdge = null;
     }
 }
@@ -355,6 +352,10 @@ function drawGraph() {
 }
 
 async function sendGraphNamesRequest() {
+    for (i = GRAPH_DROPDOWN_UI.options.length - 1; i >= 0; i--) {
+        GRAPH_DROPDOWN_UI.options[i] = null;
+    }
+
     const options = {
         method: 'POST',
         headers: {
@@ -366,15 +367,13 @@ async function sendGraphNamesRequest() {
     const response = await fetch('/api', options);
     var graphNames = await response.json();
     
-    var dropdown = document.getElementById("dropdown");
-    
     graphNames.forEach(function(name) {
         var option = document.createElement("option");
         option.text = name;
-        dropdown.add(option);
+        GRAPH_DROPDOWN_UI.add(option);
     });
     
-    dropdown.value = graphNames[0];
+    GRAPH_DROPDOWN_UI.value = graphNames[0];
 }
 
 async function sendGraphRequest(name) {
@@ -394,10 +393,24 @@ async function sendGraphRequest(name) {
     drawGraph();
 }
 
+async function saveGraph() {
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({'type':'save', 'name': GRAPH_SAVE_UI.value, 'data': graph})
+    };
+    GRAPH_SAVE_UI.value = '';
+
+    await fetch('/api', options).then(res => {
+            sendGraphNamesRequest();
+        }
+    );
+}
+
 window.loadGraph = function loadGraph() {
-    var dropdown = document.getElementById("dropdown");
-    var graphName = dropdown.options[dropdown.selectedIndex].text;
-    
+    var graphName = GRAPH_DROPDOWN_UI.options[GRAPH_DROPDOWN_UI.selectedIndex].text;    
     sendGraphRequest(graphName);
 }
 
@@ -407,34 +420,234 @@ window.clearGraph = function clearGraph() {
     nodeId = 0;
 }
 
-async function saveGraph() {
-    console.log(graph);
-    const options = {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({'type':'save', 'name': document.getElementById("save_input").value, 'data': graph})
-    };
-    
-    const response = await fetch('/api', options);
-    var done = await response.json();
-    
-    sendGraphNamesRequest();
+window.center = function center() {
+    var id = VERTEX_SELECTION_UI.value;
+    if (id === 'graph') {
+        cy.center();
+    } else {
+        cy.center(cy.$('#' + id));
+    }
+    dijkstra(cy, graph, 0);
 }
 
 var graph = {};
 var cy, eh;
 var timer;
 var isEditMode = false;
-var weightControl = false;
 var nodeId = 0;
-var selectedNodeCounter = 0;
 var selectedEdge;
-var selectedTailNode;
-var selectedHeadNode;
-const vertexSelect = document.getElementById("vertex-select");
 var weightInput, buttonMinus, buttonPlus, numberInput;
+
+const GRAPH_DROPDOWN_UI   = document.getElementById('dropdown');
+const GRAPH_SAVE_UI       = document.getElementById('save');
+const VERTEX_SELECTION_UI = document.getElementById("vertex-select");
+const RADIO_BUTTONS_UI    = document.getElementsByName('algorithms');
+const NAVBAR_UI           = document.getElementById("navbar");
+const CONTROL_UI          = document.getElementById("control");
+const SIDEBAR_LEFT_UI     = document.getElementById("sidebar-left");
+const SIDEBAR_RIGHT_UI    = document.getElementById("sidebar-right");
+const COLLAPSE_LEFT_UI    = document.getElementById("collapse-left");
+const COLLAPSE_RIGHT_UI   = document.getElementById("collapse-right");
+const RUN_BUTTON_UI       = document.getElementById('run-button');
+const STEP_BUTTON_UI      = document.getElementById('step-button');
+const SLIDER_UI           = document.getElementById('slider');
+const CONSOLE_UI          = document.getElementById('console');
+const SWITCH_UI           = document.getElementById('switch');
+const CODE_MIRROR_UI      = CodeMirror(NAVBAR_UI, {
+    value: 
+`for v in GRAPH:
+    print('vertex: ' + v)
+    window.paint_vertex(v, 'yellow', 10000)
+    for edge in GRAPH[v]:
+        w = edge['head']
+        print('edge: ({}, {})'.format(v, w))
+        window.paint_edge(v, w, 'blue', 10000)`,
+
+    mode: "python",
+    theme: "monokai",
+    indentUnit: 4,
+    lineNumbers:true
+});
+CODE_MIRROR_UI.setSize("100%", "100%");
+
+SLIDER_UI.addEventListener('change',function() {
+    this.setAttribute('value',this.value);
+});
+
+// Toggle run/pause button icon in control panel
+RUN_BUTTON_UI.onclick = function() {
+    RUN_BUTTON_UI.firstChild.classList.toggle('fa-pause');
+}
+
+// Toggle run/pause button icon in control panel
+STEP_BUTTON_UI.onclick = function() {
+
+};
+
+async function clearConsole() {
+    CONSOLE_UI.value = '';
+}
+
+
+function collapseRightSidebar() {
+    SIDEBAR_RIGHT_UI.style.marginRight = -SIDEBAR_RIGHT_UI.clientWidth + 'px';
+}
+
+function openRightSidebar() {
+    SIDEBAR_RIGHT_UI.style.marginRight = '0px';
+}
+
+function toggleRightSidebar() {
+    var offset = window.innerWidth - (SIDEBAR_RIGHT_UI.offsetLeft + SIDEBAR_RIGHT_UI.clientWidth);
+    if (offset < 0) {
+        openRightSidebar();
+    } else {
+        collapseRightSidebar();
+    }
+}
+
+function collapseLeftSidebar() {
+    SIDEBAR_LEFT_UI.classList.add('transition');
+    SIDEBAR_LEFT_UI.style.marginLeft = -SIDEBAR_LEFT_UI.clientWidth + 'px';
+}
+
+function openLeftSidebar() {
+    SIDEBAR_LEFT_UI.classList.add('transition');
+    SIDEBAR_LEFT_UI.style.marginLeft = '0px';
+}
+
+function toggleLeftSidebar() {
+    if (SIDEBAR_LEFT_UI.offsetLeft < 0) {
+        openLeftSidebar();
+    } 
+    else {
+        collapseLeftSidebar();
+    }
+}
+
+// Toggle right sidebar with transition animation
+COLLAPSE_RIGHT_UI.onclick = function() {
+    toggleRightSidebar();
+};
+
+// Toggle left sidebar with transition animation
+COLLAPSE_LEFT_UI.onclick = function() {
+    toggleLeftSidebar();
+};
+
+// Control vertical and horizontal resizers
+document.addEventListener('DOMContentLoaded', function() {
+    const resizable = function(resizer) {
+        const direction   = resizer.getAttribute('data-direction') || 'horizontal';
+        var side1, side2;
+
+        if (direction === 'vertical') {
+            side1 = NAVBAR_UI;
+            side2 = CONTROL_UI;
+        } else {
+            side1 = SIDEBAR_LEFT_UI;
+            side2 = SIDEBAR_LEFT_UI;
+        }
+
+        // The current position of mouse
+        let x = 0;
+        let y = 0;
+        let side1Height = 0;
+        let side1Width  = 0;
+
+        // Handle the mousedown event
+        const mouseDownHandler = function(e) {
+            // Disable transition animation when manually resizing sidebar
+            SIDEBAR_LEFT_UI.classList.remove('transition');
+
+            // Get the current mouse position
+            x = e.clientX;
+            y = e.clientY;
+            const rect = side1.getBoundingClientRect();
+            side1Height = rect.height;
+            side1Width  = rect.width;
+
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+        };
+
+        const mouseMoveHandler = function(e) {
+            const dx = e.clientX - x;
+            const dy = e.clientY - y;
+
+            switch (direction) {
+                case 'vertical':
+                    const h = (side1Height + dy) * 100 / resizer.parentNode.getBoundingClientRect().height;
+                    side1.style.height = `${h}%`;
+                    break;
+                case 'horizontal':
+                default:
+                    const w = (side1Width + dx) * 100 / resizer.parentNode.getBoundingClientRect().width;
+                    side1.style.width = `${w}%`;
+                    break;
+            }
+
+            const cursor = direction === 'horizontal' ? 'col-resize' : 'row-resize';
+            resizer.style.cursor = cursor;
+            document.body.style.cursor = cursor;
+
+            side1.style.userSelect = 'none';
+            side1.style.pointerEvents = 'none';
+
+            side2.style.userSelect = 'none';
+            side2.style.pointerEvents = 'none';
+        };
+
+        const mouseUpHandler = function() {
+            resizer.style.removeProperty('cursor');
+            document.body.style.removeProperty('cursor');
+
+            side1.style.removeProperty('user-select');
+            side1.style.removeProperty('pointer-events');
+
+            side2.style.removeProperty('user-select');
+            side2.style.removeProperty('pointer-events');
+
+            document.removeEventListener('mousemove', mouseMoveHandler);
+            document.removeEventListener('mouseup', mouseUpHandler);
+        };
+
+        // Attach the handler
+        resizer.addEventListener('mousedown', mouseDownHandler);
+    };
+
+    // Query all resizers
+    document.querySelectorAll('.resizer').forEach(function(ele) {
+        resizable(ele);
+    });
+});
+
+const LEARN_BUTTON_UI = document.createElement("a");
+LEARN_BUTTON_UI.innerHTML = "learn";
+LEARN_BUTTON_UI.className = 'badge badge-primary';
+LEARN_BUTTON_UI.onclick = function() {
+    collapseRightSidebar();
+    collapseLeftSidebar();
+}
+
+const CODE_BUTTON_UI = document.createElement("a");
+CODE_BUTTON_UI.innerHTML = "code";
+CODE_BUTTON_UI.className = 'badge badge-danger';
+CODE_BUTTON_UI.onclick = function() {
+    collapseRightSidebar();
+    openLeftSidebar();
+}
+
+for(i = 0; i < RADIO_BUTTONS_UI.length; i++) {
+    RADIO_BUTTONS_UI[i].nextElementSibling.onclick = function() {
+        if (!this.previousElementSibling.hasAttribute('disabled')) {
+            this.appendChild(LEARN_BUTTON_UI);
+            this.appendChild(CODE_BUTTON_UI);
+            LEARN_BUTTON_UI.hidden = false;
+            CODE_BUTTON_UI.hidden = false;
+        }        
+    };
+}
 
 initializeWeightInputUI();
 sendGraphNamesRequest();

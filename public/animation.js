@@ -1,7 +1,5 @@
 var cy;
-var duration;
 var currentAnimationId = 0;
-var didStop = false;
 
 var animationsForward;
 var animationsBackward;
@@ -20,8 +18,7 @@ export function queueAnimation(animF, animB) {
 export function play() {
     if (currentAnimationId < 0) {
         currentAnimationId = 0;
-    }
-    else if (currentAnimationId >= animationsForward.length) {
+    } else if (currentAnimationId >= animationsForward.length) {
         currentAnimationId = animationsForward.length -1 ;
         return;
     }
@@ -95,7 +92,7 @@ export function highlightNodeBorder(id, color) {
 export function highlightEdge(tail, head, color) {
     var animF = cy.elements(`edge[source = "${tail}"][target = "${head}"]`).animation({
                         style: {
-                            'line-color': 'red',
+                            'line-color': color,
                             'target-arrow-color': color
                         }
                     });

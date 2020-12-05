@@ -1,4 +1,4 @@
-import { queueAnimation, highlightNode, highlightEdge } from '../animation.js';
+import { initializeAnimations, highlightNode, highlightEdge } from '../animation.js';
 
 function getMinimulDistance(distance, settled) {
     var node = null;
@@ -14,9 +14,11 @@ function getMinimulDistance(distance, settled) {
     return node;
 }
 
-export function dijkstra(graph, cy, source) {
+export function dijkstra(cy, graph, source) {
+    initializeAnimations(cy);
+
     var distance = [];
-    var settled = [];
+    var settled  = [];
     var parent   = [];
     
     for (var i=0; i<Object.keys(graph).length; i++) {
@@ -38,10 +40,11 @@ export function dijkstra(graph, cy, source) {
         highlightNode(node, '#96c96e');
         
         var neighbours = graph[node];
-        console.log(node, neighbours);
         neighbours.forEach(function(neighbour) {
             var head   = neighbour[0];
             var weight = neighbour[1];
+
+            highlightEdge(node, head, 'orange');
             
             if (!settled[head] && (dist + weight < distance[head])) {
                 distance[head] = dist + weight;
