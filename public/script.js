@@ -73,7 +73,12 @@ const LAYOUT = {
     animate: false,
 };
 
+
+
+
 function initialize() {
+
+	
     cy = cytoscape({
         container: document.getElementById('whiteboard'),
         elements: [],
@@ -83,9 +88,39 @@ function initialize() {
         style: STYLE
     });
     cy.layout(LAYOUT);
-    
+	
+	
+	function update_select(){
+		select = document.getElementById('vertex-select');
+		var length = select.options.length;
+		var old_selected = null;
+		for (i = length-1; i >= 0; i--) {
+			if ( select.options[i].selected) {
+				old_selected = select.options[i].innerHTML
+				console.log(old_selected)
+			}
+			select.options[i] = null;
+		}
+		var opt = document.createElement('option')
+		opt.value = "graph"
+		opt.innerHTML = 'graph'
+		select.appendChild(opt) 
+		cy.nodes().forEach(function(ele) {
+			opt = document.createElement('option');
+			if(ele.id == old_selected){
+				opt.selected = "selected"
+				console.log(ele.id)
+			} 
+			opt.value = ele.id();
+			opt.innerHTML = ele.id();
+			select.appendChild(opt);
+		  });
+	}
+
+	
     // add node using left mouse click
     cy.on('click', function(cyEvent){
+		
         var target = cyEvent.target;
 
         resetSelection();
@@ -110,7 +145,9 @@ function initialize() {
                 numberInput.value = selectedEdge.data('cost');
                 enableEdgeControl(selectedEdge);
             }
-        }
+		}
+		//updateVerticesList();
+
     });
 
     // remove node or edge using right mouse click
@@ -237,19 +274,36 @@ function initializeWeightInputUI() {
 }
 
 function updateVerticesList() {
+	var old_selected = VERTEX_SELECTION_UI.value 
+	// console.log(VERTEX_SELECTION_UI.options[].text)
     for (i = VERTEX_SELECTION_UI.options.length-1; i >= 0; i--) {
         VERTEX_SELECTION_UI.options[i] = null;
-    }
-    var option = document.createElement("option");
-    option.text = 'graph';
-    VERTEX_SELECTION_UI.add(option);
-    cy.nodes().forEach(node => {
+	}
+
+	var option = document.createElement("option");
+	option.text = old_selected;
+	VERTEX_SELECTION_UI.add(option);
+	console.log(cy.nodes().id())
+	var nodes = cy.nodes().sort(function( a, b ){
+		return a.id() - b.id();
+	  });
+
+	nodes.forEach(node => {
+		// console.log(node.id())
         if (isFinite(node.id())) {
-            var option = document.createElement("option");
-            option.text = node.id();
-            VERTEX_SELECTION_UI.add(option);
+			
+			if (old_selected != node.id()){
+				var option = document.createElement("option");
+				option.text = node.id();
+				VERTEX_SELECTION_UI.add(option);
+			}
         }
-    });
+	});
+	if (old_selected != 'graph'){
+		var option = document.createElement("option");
+		option.text = 'graph';
+		VERTEX_SELECTION_UI.add(option);
+	}
 }
 
 function stepDown() {
@@ -297,13 +351,14 @@ function paint_edge(source, target, color, timeout=null) {
 
 function loadGraph() {
     var graphName = GRAPH_DROPDOWN_UI.options[GRAPH_DROPDOWN_UI.selectedIndex].text;    
-    sendGraphRequest(graphName);
+	sendGraphRequest(graphName);
 }
 
 function clearGraph() {
     cy.elements().remove();
     graph = {};
-    nodeId = 0;
+	nodeId = 0;
+	updateVerticesList()
 }
 
 function editMode() {
@@ -348,7 +403,9 @@ function drawGraph() {
     cy.elements().remove();
     cy.add(elements);
     var layout = cy.elements().makeLayout(LAYOUT);
-    layout.run();
+	layout.run();
+	updateVerticesList()
+
 }
 
 async function sendGraphNamesRequest() {
@@ -417,7 +474,9 @@ window.loadGraph = function loadGraph() {
 window.clearGraph = function clearGraph() {
     cy.elements().remove();
     graph = {};
-    nodeId = 0;
+	nodeId = 0;
+	updateVerticesList()
+
 }
 
 window.center = function center() {
