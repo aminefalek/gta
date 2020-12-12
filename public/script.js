@@ -280,13 +280,24 @@ function updateVerticesList() {
         VERTEX_SELECTION_UI.options[i] = null;
 	}
 
-	var option = document.createElement("option");
-	option.text = old_selected;
-	VERTEX_SELECTION_UI.add(option);
-	console.log(cy.nodes().id())
+	
+
 	var nodes = cy.nodes().sort(function( a, b ){
 		return a.id() - b.id();
 	  });
+
+	//nodes = Array.from(nodes.data("id"))
+	var all_ids  = []; 
+	nodes.forEach( node => {
+		all_ids.push(node.id())
+	});
+	if(! all_ids.includes(old_selected)){
+		old_selected = "graph";
+	}
+
+	var option = document.createElement("option");
+	option.text = old_selected;
+	VERTEX_SELECTION_UI.add(option);
 
 	nodes.forEach(node => {
 		// console.log(node.id())
