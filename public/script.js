@@ -1,3 +1,4 @@
+
 const STYLE = [
     {
         selector: 'node',
@@ -462,19 +463,33 @@ async function sendGraphRequest(name) {
 }
 
 async function saveGraph() {
-    const options = {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({'type':'save', 'name': GRAPH_SAVE_UI.value, 'data': graph})
-    };
-    GRAPH_SAVE_UI.value = '';
 
-    await fetch('/api', options).then(res => {
-            sendGraphNamesRequest();
-        }
-    );
+	// var to_dl = {};
+		// to_dl["data"] = cy.json();
+	// to_dl["type"] = 'save';
+	// to_dl["name"] = GRAPH_SAVE_UI.value;
+	// to_dl["data"] = cy.json();
+	// console.log(to_dl);
+
+    // const options = {
+    //     method: 'POST',
+    //     headers: {
+    //         "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify(to_dl),
+	// };
+	
+    // GRAPH_SAVE_UI.value = '';
+
+	const a = document.createElement("a");
+	const file = new Blob([JSON.stringify(cy.json())], { type: "application/json" });
+	a.href = URL.createObjectURL(file);
+	a.download = GRAPH_SAVE_UI.value;
+	a.click();
+    // await fetch('/api', options).then(res => {
+    //         sendGraphNamesRequest();
+    //     }
+    // );
 }
 
 window.loadGraph = function loadGraph() {

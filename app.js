@@ -31,7 +31,7 @@ app.post('/api', (request, response) => {
     }
 });
 
-function saveGraph(name, graph) {
+function oldsaveGraph(name, graph) {
     var path = 'graphs/';
     var fs = require('fs')
     var file = fs.createWriteStream(path + name + '.txt', {flags: 'w'});
@@ -42,6 +42,36 @@ function saveGraph(name, graph) {
         });
     }
 }
+function saveGraph(name, graph) {
+	const a = document.createElement("a");
+	const file = new Blob([graph], { type: "application/json" });
+	a.href = URL.createObjectURL(file);
+	a.download = name;
+	a.click();
+	// var path = 'graphs/';
+    // var fs = require('fs')
+    // var file = fs.createWriteStream(path + name + '.txt', {flags: 'w'});
+	// file.write(JSON.stringify(graph))
+    // for (var i=0; i<Object.keys(graph).length; i++) {
+        // graph[i].forEach(edge => {
+            // file.write(edge.join() + '\r\n');
+        // });
+    // }
+}
+
+
+   
+   function download(content, fileName, contentType) {
+	const a = document.createElement("a");
+	const file = new Blob([content], { type: contentType });
+	a.href = URL.createObjectURL(file);
+	a.download = fileName;
+	a.click();
+   }
+   
+   function onDownload(){
+	download(JSON.stringify(jsonData), "json-file-name.json", "text/plain");
+   }
 
 function loadGraphs() {
     var graphs = {};
