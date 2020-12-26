@@ -1,6 +1,4 @@
 from browser import document, window
-from tokenize import tokenize, NL
-from io import BytesIO
 import sys
 
 
@@ -13,40 +11,34 @@ class ConsoleOutput:
         self.console.scrollTop = self.console.scrollHeight
 
 
-def unwrap(code):
-    unwrapped = ""
-    g = tokenize(BytesIO(code.encode('utf-8')).readline)
-
-    for toknum, tokval, (srow, scol), (erow, ecol), line in g:
-        if tokval == '\n':
-            if toknum != NL:
-                unwrapped += line
-            else:
-                unwrapped += line[:-1]
-    return unwrapped
-
-
-def format(code, delay):
+def format_code(code, delay):
     code = code.replace('def', 'async def')
     code = code.replace('paint_vertex', 'window.paint_vertex')
     code = code.replace('paint_edge', 'window.paint_edge')
 
-    lines = code.split('\n')
+    lines = [line for line in code.split('\n') if line.strip() != '']
     formatted = TEMPLATE
     formatted += 'async def main():\n'
+    line_number = 0
     for line in lines:
-
-        if line.strip() != '' and not any(keyword in line for keyword in ['def', 'for', 'while', 'return']):
-            indentation = ' ' * int((len(line) - len(line.lstrip())))
-            formatted += '\t' + indentation + \
-                'await aio.sleep({})\n'.format(delay)
-        formatted += '\t' + line + '\n'
+        indentation = ' ' * ((len(line) - len(line.lstrip())))
+        formatted += '{}while ((not window.step and window.paused) or (window.step and window.step != window.highlightedLine)): await aio.sleep(0.1)\n'.format(
+            TAB + indentation)
+        formatted += '{}if (not window.executing): return\n'.format(
+            TAB + indentation)
+        formatted += '{}window.resetLine(window.highlightedLine)\n'.format(
+            TAB + indentation)
+        formatted += '{}window.highlightLine({})\n'.format(
+            TAB + indentation, line_number)
+        formatted += '{}await aio.sleep({})\n'.format(TAB + indentation, delay)
+        formatted += '{}{}\n'.format(TAB, line)
+        line_number += 1
 
     formatted += 'aio.run(main())'
-
     return formatted
 
 
+TAB = ' ' * 4
 TEMPLATE = """from browser import document, window, aio
 
 GRAPH = {}
@@ -59,10 +51,11 @@ for node in window.graph:
 
 
 def run(event):
-    code = format(document.querySelector(
-        ".CodeMirror").CodeMirror.getValue(), document["slider"].attrs['value'])
-
-    exec(code)
+    if (not window.executing):
+        window.executing = True
+        code = format_code(document.querySelector(
+            ".CodeMirror").CodeMirror.getValue(), document["slider"].attrs['value'])
+        exec(code)
 
 
 document["run-button"].bind("click", run)

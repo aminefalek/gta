@@ -18,6 +18,8 @@ function dijkstra(graph, source) {
     var costs   = [];
     var settled = [];
     var parent  = [];
+
+    var targets = [];
     
     for (var i=0; i<Object.keys(graph).length; i++) {
         settled.push(false);
@@ -27,8 +29,12 @@ function dijkstra(graph, source) {
         }
         else {
             costs.push(Infinity);
+            targets.push(i);
         }
     }
+
+    anim_display_label([source], 0);
+    anim_display_label(targets, Infinity);
     
     while(settled.includes(false)) {
         var node = getMinimulDistance(costs, settled);
@@ -38,20 +44,22 @@ function dijkstra(graph, source) {
         var cost = costs[node];
         
         settled[node] = true;
-        highlightNode(node, '#96c96e');
+        anim_highlight_node(node, '#96c96e');
+        anim_display_label([node], cost);
         
         var neighbours = graph[node];
         neighbours.forEach(function(neighbour) {
             var head   = parseInt(neighbour[0]);
             var weight = neighbour[1];
 
-            highlightEdge(node, head, 'orange');
+            anim_highlight_edge(node, head, 'orange');
             
             if (!settled[head] && (cost + weight < costs[head])) {
                 costs[head] = cost + weight;
                 parent[head] = node;
 
-                highlightNode(head, 'orange');
+                anim_highlight_node(head, 'orange');
+                anim_display_label([head], cost);
             }
         });
     }

@@ -7,7 +7,8 @@ const STYLE = [
             'border-width': 3,
             'border-color': 'black',
             'background-color': 'black',
-            'label': 'data(id)'
+            'label': 'data(id)',
+            'text-wrap': 'wrap'
         }
     },
     {
@@ -187,14 +188,25 @@ function initialize() {
 }
 
 function resetSelection() {
-    cy.$(':selected').style( { 'background-color' : 'black' });
+    cy.$(':selected').style({ 'background-color' : 'black' });
     cy.$(':selected').unselect();
+}
+
+function resetNodeStyle(node) {
+    if (node) {
+        node.style({ 'background-color' : 'black' });
+    }
 }
 
 function resetEdgeStyle(edge) {
     if (edge) {
-        edge.style( { 'line-color' : '#666666', 'target-arrow-color': '#666666' });
+        edge.style({ 'line-color' : '#666666', 'target-arrow-color': '#666666' });
     }
+}
+
+function resetGraphStyle() {
+    cy.nodes().style({ 'background-color' : 'black' });
+    cy.edges().style({ 'line-color' : '#666666', 'target-arrow-color': '#666666' });
 }
 
 function enableEdgeControl(ele) {
@@ -310,6 +322,8 @@ function editMode() {
     isEditMode = !isEditMode;
     
     if (isEditMode) {
+        collapseLeftSidebar();
+        COLLAPSE_LEFT_UI.disabled = true;
         eh.enable();
         for(i = 0; i < RADIO_BUTTONS_UI.length; i++) {
             RADIO_BUTTONS_UI[i].disabled = true;
@@ -319,6 +333,7 @@ function editMode() {
         CODE_BUTTON_UI.hidden = true;
     }
     else {
+        COLLAPSE_LEFT_UI.disabled = false;
         eh.disable();
         for(i = 0; i < RADIO_BUTTONS_UI.length; i++) {
             RADIO_BUTTONS_UI[i].disabled = false;
@@ -349,6 +364,15 @@ function drawGraph() {
     cy.add(elements);
     var layout = cy.elements().makeLayout(LAYOUT);
     layout.run();
+}
+
+function highlightLine(line) {       
+    CODE_MIRROR.addLineClass(line, 'background', 'highlighted-line');
+    highlightedLine = line;
+}
+
+function resetLine(line) {       
+    CODE_MIRROR.removeLineClass(line, 'background', 'highlighted-line');
 }
 
 async function sendGraphNamesRequest() {
@@ -436,6 +460,10 @@ var isEditMode = false;
 var nodeId = 0;
 var selectedEdge;
 var weightInput, buttonMinus, buttonPlus, numberInput;
+var executing = false;
+var paused = true;
+var highlightedLine = 0;
+var step = null;
 
 const GRAPH_DROPDOWN_UI   = document.getElementById('dropdown');
 const GRAPH_SAVE_UI       = document.getElementById('save');
@@ -450,25 +478,26 @@ const COLLAPSE_LEFT_UI    = document.getElementById("collapse-left");
 const COLLAPSE_RIGHT_UI   = document.getElementById("collapse-right");
 const RUN_BUTTON_UI       = document.getElementById('run-button');
 const STEP_BUTTON_UI      = document.getElementById('step-button');
+const STOP_BUTTON_UI      = document.getElementById('stop-button');
 const SLIDER_UI           = document.getElementById('slider');
 const CONSOLE_UI          = document.getElementById('console');
 const SWITCH_UI           = document.getElementById('switch');
-const CODE_MIRROR_UI      = CodeMirror(NAVBAR_UI, {
+const CODE_MIRROR         = CodeMirror(NAVBAR_UI, {
     value: 
 `for v in GRAPH:
     print('vertex: ' + v)
-    window.paint_vertex(v, 'yellow', 10000)
+    paint_vertex(v, 'yellow')
     for edge in GRAPH[v]:
         w = edge['head']
         print('edge: ({}, {})'.format(v, w))
-        window.paint_edge(v, w, 'blue', 10000)`,
+        paint_edge(v, w, 'blue')`,
 
     mode: "python",
     theme: "monokai",
     indentUnit: 4,
     lineNumbers:true
 });
-CODE_MIRROR_UI.setSize("100%", "100%");
+CODE_MIRROR.setSize("100%", "100%");
 
 SLIDER_UI.addEventListener('change',function() {
     this.setAttribute('value',this.value);
@@ -476,12 +505,28 @@ SLIDER_UI.addEventListener('change',function() {
 
 // Toggle run/pause button icon in control panel
 RUN_BUTTON_UI.onclick = function() {
+    console.log({'step': step, 'paused': paused, 'line': highlightedLine});
+    step = null;
+    paused = !paused;
     RUN_BUTTON_UI.firstChild.classList.toggle('fa-pause');
+    STEP_BUTTON_UI.disabled = !STEP_BUTTON_UI.disabled;
 }
 
-// Toggle run/pause button icon in control panel
 STEP_BUTTON_UI.onclick = function() {
+    console.log({'step': step, 'paused': paused, 'line': highlightedLine});
+    step = highlightedLine;
+    RUN_BUTTON_UI.firstChild.classList.remove('fa-pause');
+};
 
+STOP_BUTTON_UI.onclick = function() {
+    resetLine(highlightedLine);
+    highlightedLine = 0;
+    RUN_BUTTON_UI.firstChild.classList.remove('fa-pause');
+    clearConsole();
+    resetGraphStyle();
+    executing = false;
+    paused = true;
+    step = null;    
 };
 
 async function clearConsole() {
@@ -629,7 +674,7 @@ LEARN_BUTTON_UI.onclick = function() {
     collapseRightSidebar();
     collapseLeftSidebar();
     PLAYER_UI.style.visibility = 'visible';
-    dijkstra(graph, '0');
+    dijkstra(graph, 0);
 
 }
 

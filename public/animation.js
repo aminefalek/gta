@@ -1,3 +1,39 @@
+class LabelDisplay {
+    constructor(ids, label) {
+        this.label = label;
+        this.elements = [];
+
+        console.log('nodes:', ids);
+
+        for(var i=0; i<ids.length; i++) {
+            this.elements.push(cy.$(`#${ids[i]}`));
+        }        
+    }
+    show() {
+        for(var i=0; i<this.elements.length; i++) {
+
+            let ref = this.elements[i].popperRef();
+            this.elements[i].tippy = tippy(ref, {
+                content: () => {
+                    if (this.label == Infinity) {
+                        return `cost = ∞`;
+                    }
+                    return `cost = ${this.label}`;
+                },
+                trigger: "manual",
+                arrow: true,
+                placement: "bottom",
+                hideOnClick: false,
+                multiple: true,
+                sticky: true,
+                interactive: true
+            });
+
+            this.elements[i].tippy.show();
+        }
+    }
+}
+
 var animationId = 0;
 
 var forwardAnimations;
@@ -8,9 +44,9 @@ function initializeAnimations() {
     backwardAnimations = [];
 }
 
-function queueAnimation(animF, animB) {
-    forwardAnimations.push(animF);
-    backwardAnimations.push(animB);
+function queueAnimation(animF, animB, type) {
+    forwardAnimations.push({'type': type, 'animation': animF});
+    backwardAnimations.push({'type': type, 'animation': animB});
 }
 
 function play() {
@@ -22,10 +58,19 @@ function play() {
         return;
     }
 
-    forwardAnimations[animationId].play().promise().then(function () {
+    var anim = forwardAnimations[animationId]['animation'];
+    var type = forwardAnimations[animationId]['type'];
+
+    if (type == 'label') {
+        anim.show();
         animationId++;
         play();
-    });
+    } else {
+        anim.play().promise('completed').then(function () {
+            animationId++;
+            play();
+        });
+    }
 }
 
 function pause() {
@@ -55,7 +100,7 @@ function stepBackward() {
     backwardAnimations[--animationId].progress(0).apply();
 }
 
-function highlightNode(id, color) {
+function anim_highlight_node(id, color) {
     var animF = cy.$(`#${id}`).animation({
         style: {
             'background-color': color
@@ -69,11 +114,11 @@ function highlightNode(id, color) {
         },
         duration: 500
     });
-    
-    queueAnimation(animF, animB);
+
+    queueAnimation(animF, animB, 'node');
 }
 
-function highlightNodeBorder(id, color) {
+function anim_highlight_node_border(id, color) {
     var animF = cy.$('#' + id).animation({
                         style: {
                             'border-color': color
@@ -86,10 +131,10 @@ function highlightNodeBorder(id, color) {
                         }
                     });
     
-    queueAnimation(animF, animB);
+    queueAnimation(animF, animB, 'border');
 }
 
-function highlightEdge(tail, head, color) {
+function anim_highlight_edge(tail, head, color) {
     var edge = cy.elements(`edge[source = "${tail}"][target = "${head}"]`);
     
     var animF = edge.animation({
@@ -108,5 +153,10 @@ function highlightEdge(tail, head, color) {
         duration: 500
     });
     
-    queueAnimation(animF, animB);
+    queueAnimation(animF, animB, 'edge');
+}
+
+function anim_display_label(nodes, label) {
+    var anim = new LabelDisplay(nodes, label);
+    queueAnimation(anim, anim, 'label');
 }
