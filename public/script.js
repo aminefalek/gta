@@ -70,8 +70,7 @@ const STYLE = [
 ];
 
 const LAYOUT = {
-    name: 'circle',
-    animate: false,
+    name: 'preset',
 };
 
 function initialize() {
@@ -95,6 +94,7 @@ function initialize() {
             if (target === cy) {
                 if (selectedEdge) {
                     selectedEdge.data('cost', numberInput.value == '' ? 1: numberInput.value);
+                    updateEdgeCost(selectedEdge);
                     resetEdgeStyle(selectedEdge);
                     selectedEdge.tippy.destroy();
                     selectedEdge = null;
@@ -181,7 +181,7 @@ function initialize() {
             return { group:'edges', data: { source: sourceNode.id(), target: targetNode.id(), cost: 1 } };
         },
         complete: function( sourceNode, targetNode, addedEles ){
-            graph[sourceNode.id()].push([targetNode.id(), 1]);
+            graph[sourceNode.id()].push( {'head': targetNode.id(), 'cost': 1} );
         },
     });
     eh.disable();
@@ -246,6 +246,15 @@ function initializeWeightInputUI() {
     weightInput.appendChild(buttonMinus);
     weightInput.appendChild(numberInput);
     weightInput.appendChild(buttonPlus);
+}
+
+function updateEdgeCost(updatedEdge) {
+    graph[updatedEdge.source().id()].forEach(edge => {
+        if (edge['head'] == updatedEdge.target().id()) {
+            edge['cost'] = parseInt(updatedEdge.data('cost'));
+            return;
+        }
+    });
 }
 
 function updateVerticesList() {
@@ -346,24 +355,23 @@ function editMode() {
     }
 }
 
-function drawGraph() {
+function drawGraph(layout) {
     var elements = [];
+    var coordinates = getNodeCoordinates(layout);
     
     Object.keys(graph).forEach(function(tail) {
-        elements.push({group:'nodes', data: { id: tail }});
-        graph[tail].forEach(function(neighbour) {
-            var head = neighbour[0];
-            var cost = neighbour[1];
-            
-            elements.push({group:'edges', data: { source: tail, target: head, cost: cost }});
+        elements.push({group:'nodes', data: { id: tail }, position: {'x': coordinates[tail]['x'], 'y': coordinates[tail]['y']} });
+        graph[tail].forEach(function(edge) {
+            elements.push( {group:'edges', data: { source: tail, target: edge['head'], cost: edge['cost'] }} );
         });
-    });    
+    });
     nodeId = Object.keys(graph).length;
 
     cy.elements().remove();
     cy.add(elements);
     var layout = cy.elements().makeLayout(LAYOUT);
     layout.run();
+    cy.center();
 }
 
 function highlightLine(line) {       
@@ -400,6 +408,29 @@ async function sendGraphNamesRequest() {
     GRAPH_DROPDOWN_UI.value = graphNames[0];
 }
 
+function getNodePositions() {
+    var coordinates = cy.nodes().map( n => n.position() );
+    var positions = [];
+    var width  = window.screen.width;
+    var height = window.screen.height;
+    coordinates.forEach(node => {
+        positions.push({'x': Math.round(100 * ( width  - node['x'] ) / width),
+                        'y': Math.round(100 * ( height - node['y'] ) / height)});
+    });
+    return positions;
+}
+
+function getNodeCoordinates(positions) {
+    var coordinates = [];
+    var width  = window.screen.width;
+    var height = window.screen.height;
+    positions.forEach(node => {
+        coordinates.push({'x': width  * (1 - node['x'] / 100),
+                          'y': height * (1 - node['y'] / 100)});
+    });
+    return coordinates;
+}
+
 async function sendGraphRequest(name) {
     if (name == '') {
         return;
@@ -413,8 +444,9 @@ async function sendGraphRequest(name) {
     };
     
     const response = await fetch('/api', options);
-    graph = await response.json();
-    drawGraph();
+    data = await response.json();
+    graph = data['graph'];
+    drawGraph(data['layout']);
 }
 
 async function saveGraph() {
@@ -423,7 +455,10 @@ async function saveGraph() {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({'type':'save', 'name': GRAPH_SAVE_UI.value, 'data': graph})
+        body: JSON.stringify({'type':'save',
+                              'name': GRAPH_SAVE_UI.value, 
+                              'graph': graph,
+                              'layout': getNodePositions()})
     };
     GRAPH_SAVE_UI.value = '';
 
@@ -505,7 +540,6 @@ SLIDER_UI.addEventListener('change',function() {
 
 // Toggle run/pause button icon in control panel
 RUN_BUTTON_UI.onclick = function() {
-    console.log({'step': step, 'paused': paused, 'line': highlightedLine});
     step = null;
     paused = !paused;
     RUN_BUTTON_UI.firstChild.classList.toggle('fa-pause');
@@ -513,7 +547,7 @@ RUN_BUTTON_UI.onclick = function() {
 }
 
 STEP_BUTTON_UI.onclick = function() {
-    console.log({'step': step, 'paused': paused, 'line': highlightedLine});
+    console.log(graph);
     step = highlightedLine;
     RUN_BUTTON_UI.firstChild.classList.remove('fa-pause');
 };

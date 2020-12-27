@@ -41,11 +41,7 @@ def format_code(code, delay):
 TAB = ' ' * 4
 TEMPLATE = """from browser import document, window, aio
 
-GRAPH = {}
-for node in window.graph:
-    GRAPH[node] = []
-    for edge in window.graph[node]:
-        GRAPH[node].append({'head': edge[0], 'cost': edge[1]})
+GRAPH = window.graph.to_dict()
 
 """
 
