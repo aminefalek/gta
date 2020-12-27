@@ -263,6 +263,16 @@ button:focus {
     margin-bottom: 0px;
 }
 
+#logout {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#logout h1 {
+    margin-right: 10px;
+}
+
 #dropdown-graph,
 #save-graph {
     margin-top: 4px;
