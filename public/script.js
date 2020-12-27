@@ -248,6 +248,16 @@ function initializeWeightInputUI() {
     weightInput.appendChild(buttonPlus);
 }
 
+function stepDown() {
+    var value = parseInt(numberInput.value);
+    numberInput.value = --value;
+}
+
+function stepUp() {
+    var value = parseInt(numberInput.value);
+    numberInput.value = ++value;
+}
+
 function updateEdgeCost(updatedEdge) {
     graph[updatedEdge.source().id()].forEach(edge => {
         if (edge['head'] == updatedEdge.target().id()) {
@@ -273,22 +283,13 @@ function updateVerticesList() {
     });
 }
 
-function stepDown() {
-    var value = parseInt(numberInput.value);
-    numberInput.value = --value;
-}
-
-function stepUp() {
-    var value = parseInt(numberInput.value);
-    numberInput.value = ++value;
-}
-
 function addNode(id) {
     cy.add([
         { group:'nodes', data: { id: id } }
     ]);
 }
 
+//? Accessible to python coding interface
 function paint_vertex(id, color, timeout=null) {
     cy.$(`#${id}`).animation({
         style: {
@@ -302,6 +303,7 @@ function paint_vertex(id, color, timeout=null) {
     }
 }
 
+//? Accessible to python coding interface
 function paint_edge(source, target, color, timeout=null) {
     var edge = cy.elements(`edge[source = "${source}"][target = "${target}"]`);
     edge.animation({
@@ -321,38 +323,28 @@ function loadGraph() {
     sendGraphRequest(graphName);
 }
 
+async function sendGraphRequest(name) {
+    if (name == '') {
+        return;
+    }
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({'type':'graph', 'name': name})
+    };
+    
+    const response = await fetch('/api', options);
+    data = await response.json();
+    graph = data['graph'];
+    drawGraph(data['layout']);
+}
+
 function clearGraph() {
     cy.elements().remove();
     graph = {};
     nodeId = 0;
-}
-
-function editMode() {
-    isEditMode = !isEditMode;
-    
-    if (isEditMode) {
-        collapseLeftSidebar();
-        COLLAPSE_LEFT_UI.disabled = true;
-        eh.enable();
-        for(i = 0; i < RADIO_BUTTONS_UI.length; i++) {
-            RADIO_BUTTONS_UI[i].disabled = true;
-            RADIO_BUTTONS_UI[i].checked = false;
-        };
-        LEARN_BUTTON_UI.hidden = true;
-        CODE_BUTTON_UI.hidden = true;
-    }
-    else {
-        COLLAPSE_LEFT_UI.disabled = false;
-        eh.disable();
-        for(i = 0; i < RADIO_BUTTONS_UI.length; i++) {
-            RADIO_BUTTONS_UI[i].disabled = false;
-        };
-        resetEdgeStyle(selectedEdge);
-        if (selectedEdge) {
-            selectedEdge.tippy.destroy();
-        }
-        selectedEdge = null;
-    }
 }
 
 function drawGraph(layout) {
@@ -403,9 +395,38 @@ async function sendGraphNamesRequest() {
         var option = document.createElement("option");
         option.text = name;
         GRAPH_DROPDOWN_UI.add(option);
+        console.log(name);
     });
     
     GRAPH_DROPDOWN_UI.value = graphNames[0];
+}
+
+function editMode() {
+    isEditMode = !isEditMode;
+    
+    if (isEditMode) {
+        collapseLeftSidebar();
+        COLLAPSE_LEFT_UI.disabled = true;
+        eh.enable();
+        for(i = 0; i < RADIO_BUTTONS_UI.length; i++) {
+            RADIO_BUTTONS_UI[i].disabled = true;
+            RADIO_BUTTONS_UI[i].checked = false;
+        };
+        LEARN_BUTTON_UI.hidden = true;
+        CODE_BUTTON_UI.hidden = true;
+    }
+    else {
+        COLLAPSE_LEFT_UI.disabled = false;
+        eh.disable();
+        for(i = 0; i < RADIO_BUTTONS_UI.length; i++) {
+            RADIO_BUTTONS_UI[i].disabled = false;
+        };
+        resetEdgeStyle(selectedEdge);
+        if (selectedEdge) {
+            selectedEdge.tippy.destroy();
+        }
+        selectedEdge = null;
+    }
 }
 
 function getNodePositions() {
@@ -429,24 +450,6 @@ function getNodeCoordinates(positions) {
                           'y': height * (1 - node['y'] / 100)});
     });
     return coordinates;
-}
-
-async function sendGraphRequest(name) {
-    if (name == '') {
-        return;
-    }
-    const options = {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({'type':'graph', 'name': name})
-    };
-    
-    const response = await fetch('/api', options);
-    data = await response.json();
-    graph = data['graph'];
-    drawGraph(data['layout']);
 }
 
 async function saveGraph() {

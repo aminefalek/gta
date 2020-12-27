@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>GTA</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="icon" type="image/png" href="icons/network.svg" />
+        <link rel="stylesheet" href="login.css">
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+
+    <body>
+        <div class="container" id="container">
+            <div class="form-container sign-up-container">
+                <form action="/register" method="POST">
+                    <h1>Create Account</h1>
+                    <div class="social-container">
+                        <a href="#" class="social"><i class="fa fa-facebook-f"></i></a>
+                        <a href="#" class="social"><i class="fa fa-google"></i></a>
+                    </div>
+                    <span>or use your email for registration</span>
+                    <input type="text" placeholder="Name" name="name" required/>
+                    <input type="email" placeholder="Email" name="email" required/>
+                    <input type="password" placeholder="Password" name="password" required/>
+                    <button type="submit">Sign Up</button>
+                </form>
+            </div>
+            <div class="form-container sign-in-container">
+                <form action="/login" method="POST">
+                    <h1>Sign in</h1>
+                    <div class="social-container">
+                        <a href="#" class="social"><i class="fa fa-facebook-f"></i></a>
+                        <a href="#" class="social"><i class="fa fa-google"></i></a>
+                    </div>
+                    <span>or use your account</span>
+                    <input type="email" placeholder="Email" name="email" required/>
+                    <input type="password" placeholder="Password" name="password" required/>
+
+                    <% if (messages.error) { %>
+                        <%= messages.error %>
+                    <% } %>
+
+                    <a href="#">Forgot your password?</a>
+                    <button type="submit">Sign In</button>
+                </form>
+            </div>
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>Still Here ?</h1>
+                        <p>The graphs are waiting</p>
+                        <button class="ghost" id="signIn">Sign In</button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1>Hi There!</h1>
+                        <p>For the love of graphs, sign in!</p>
+                        <button class="ghost" id="signUp">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="login.js"></script>
+    </body>
+</html>
