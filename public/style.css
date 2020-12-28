@@ -263,14 +263,32 @@ button:focus {
     margin-bottom: 0px;
 }
 
-#logout {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+.grid-container {
+    display: grid;
+    align-items: center;
+    justify-items: left;
+    grid-template-columns: 1fr 1.5fr 1.5fr;
+    grid-template-rows: 30px 30px;
+    grid-template-areas:
+        "logo title title"
+        "logo user logout";
 }
 
-#logout h1 {
-    margin-right: 10px;
+.grid-item-logo {
+    grid-area: logo;
+    max-width: 50px;
+}
+.grid-item-title {
+    grid-area: title;
+    margin: 0;
+    text-align: left;
+}
+.grid-item-user {
+    grid-area: user;
+    margin: 0;
+}
+.grid-item-logout {
+    grid-area: logout;
 }
 
 #dropdown-graph,
