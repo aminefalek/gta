@@ -2,23 +2,24 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
-var fs = require('fs')
-const users = []
-
 const express = require('express')
 const bcrypt = require('bcrypt')
 const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
+const mongoose = require('mongoose')
+const User = require('./models/User')
+const Graph = require('./models/Graph')
 const app = express()
 
+const dbURI = 'mongodb+srv://amine:BellmanFord1@gta.eldo9.mongodb.net/gta?retryWrites=true&w=majority'
+mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
+        .then((result) => app.listen(3000, () => console.log("listening at 3000")))
+        .catch((error) => console.log(error))
+
 const initializePassport = require('./passport-config')
-initializePassport(
-    passport, 
-    email => users.find(user => user.email === email),
-    id => users.find(user => user.id === id)
-)
+initializePassport(passport)
 
 app.use(express.static('public'))
 app.use(express.json({ limit: '1mb' }));
@@ -49,18 +50,20 @@ app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
 }))
 
 app.post('/register', checkNotAuthenticated, async (req, res) => {
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        users.push({
-            id: Date.now.toString(),
-            name: req.body.name,
-            email: req.body.email,
-            password: hashedPassword
+    const hashedPassword = await bcrypt.hash(req.body.password, 10)
+    const user = new User({
+        name: req.body.name,
+        email: req.body.email,
+        password: hashedPassword
+    })
+    user.save()
+        .then((result) => {
+            return res.redirect('/login')
         })
-        res.redirect('/login')
-    } catch (error) {
-        res.redirect('/login')
-    }
+        .catch((error) => {
+            console.log(error)
+            return res.redirect('/login')
+        })
 })
 
 app.delete('/logout', (req, res) => {
@@ -82,46 +85,49 @@ function checkNotAuthenticated(req, res, next) {
     next()
 }
 
-app.listen(3000, () => console.log("listening at 3000"));
+app.post('/save-graph', (req, res) => {    
+    Graph.findOne({ name: req.body.name}, (err, graph) => {
+        if (graph) {
+            graph.name = req.body.name
+            graph.graph = req.body.graph
+            graph.layout = req.body.layout
+            graph.save()
+                .then((result) => {
+                    res.json({status: 'graph added to database'})
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        } else {
+            const graph = new Graph({
+                userId: req.user.id,
+                name: req.body.name,
+                graph: req.body.graph,
+                layout: req.body.layout
+            })
+            graph.save()
+                .then((result) => {
+                    res.json({status: 'graph added to database'})
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
+    })
+})
 
-app.post('/api', (request, response) => {
-
-    var type = request.body['type'];
-    
-    if (type == 'graph') {
-        var name  = request.body['name'];
-        response.json(graphs[name]);
-    } else if (type == 'graph_names') {
-        response.json(Object.keys(graphs));
-    } else if (type == 'save') {
-        var name  = request.body['name'];
-        graph = {'graph': request.body['graph'],
-                 'layout': request.body['layout']};
-        fs.writeFile('graphs/' + name + '.json', JSON.stringify(graph, null, 2), function(err) {
-            if (err) {
-                console.log('Error: ' + err);
-            }
-        });        
-        graphs[name] = graph;
-    }
-});
-
-function loadGraphs() {
-    var graphs = {};
-    
-    var path = 'graphs/';
-    var files  = fs.readdirSync(path);
-    var name;
-    
-    files.forEach(file => {
-        const fs = require('fs');
-        let data = fs.readFileSync(path + file);
-        let graph = JSON.parse(data);
-        name = file.split('.')[0];
-        graphs[name] = graph;
+app.post('/load-graph', (req, res) => {
+    Graph.findOne({ name: req.body.name }, (err, graph) => {
+        res.json(graph);
     });
-    console.log('All graphs loaded.');
-    return graphs;
-}
+})
 
-var graphs = loadGraphs();
+app.post('/load-graph-names', (req, res) => {
+    Graph.find({ userId: req.user.id }, (err, graphs) => {
+        let graphNames = []
+        graphs.forEach(graph => {
+            graphNames.push(graph['name'])
+        });
+        res.json(graphNames);
+    });
+})

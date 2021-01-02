@@ -318,29 +318,6 @@ function paint_edge(source, target, color, timeout=null) {
     }
 }
 
-function loadGraph() {
-    var graphName = GRAPH_DROPDOWN_UI.options[GRAPH_DROPDOWN_UI.selectedIndex].text;    
-    sendGraphRequest(graphName);
-}
-
-async function sendGraphRequest(name) {
-    if (name == '') {
-        return;
-    }
-    const options = {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({'type':'graph', 'name': name})
-    };
-    
-    const response = await fetch('/api', options);
-    data = await response.json();
-    graph = data['graph'];
-    drawGraph(data['layout']);
-}
-
 function clearGraph() {
     cy.elements().remove();
     graph = {};
@@ -373,32 +350,6 @@ function highlightLine(line) {
 
 function resetLine(line) {       
     CODE_MIRROR.removeLineClass(line, 'background', 'highlighted-line');
-}
-
-async function sendGraphNamesRequest() {
-    for (i = GRAPH_DROPDOWN_UI.options.length - 1; i >= 0; i--) {
-        GRAPH_DROPDOWN_UI.options[i] = null;
-    }
-
-    const options = {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({'type':'graph_names'})
-    };
-    
-    const response = await fetch('/api', options);
-    var graphNames = await response.json();
-    
-    graphNames.forEach(function(name) {
-        var option = document.createElement("option");
-        option.text = name;
-        GRAPH_DROPDOWN_UI.add(option);
-        console.log(name);
-    });
-    
-    GRAPH_DROPDOWN_UI.value = graphNames[0];
 }
 
 function editMode() {
@@ -465,15 +416,50 @@ async function saveGraph() {
     };
     GRAPH_SAVE_UI.value = '';
 
-    await fetch('/api', options).then(res => {
-            sendGraphNamesRequest();
-        }
-    );
+    await fetch('/save-graph', options).then(response => {
+        loadGraphNames();
+    });
 }
 
-window.loadGraph = function loadGraph() {
-    var graphName = GRAPH_DROPDOWN_UI.options[GRAPH_DROPDOWN_UI.selectedIndex].text;    
-    sendGraphRequest(graphName);
+async function loadGraph() {
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            'name': GRAPH_DROPDOWN_UI.options[GRAPH_DROPDOWN_UI.selectedIndex].text, 
+        })
+    };
+    const response = await fetch('/load-graph', options);
+    data = await response.json();
+    graph = data['graph'];
+    drawGraph(data['layout']);
+}
+
+async function loadGraphNames() {
+    for (i = GRAPH_DROPDOWN_UI.options.length - 1; i >= 0; i--) {
+        GRAPH_DROPDOWN_UI.options[i] = null;
+    }
+
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+    };
+    
+    const response = await fetch('/load-graph-names', options);
+    var graphNames = await response.json();
+    
+    graphNames.forEach(name => {
+        var option = document.createElement("option");
+        option.text = name;
+        GRAPH_DROPDOWN_UI.add(option);
+        console.log(name);
+    });
+    
+    GRAPH_DROPDOWN_UI.value = graphNames[0];
 }
 
 window.clearGraph = function clearGraph() {
@@ -735,5 +721,5 @@ for(i = 0; i < RADIO_BUTTONS_UI.length; i++) {
 }
 
 initializeWeightInputUI();
-sendGraphNamesRequest();
+loadGraphNames();
 initialize();

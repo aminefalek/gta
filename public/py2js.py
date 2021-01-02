@@ -1,6 +1,8 @@
 from browser import document, window
 import sys
 
+TAB = ' ' * 4
+
 
 class ConsoleOutput:
     def __init__(self):
@@ -16,10 +18,12 @@ def format_code(code, delay):
     code = code.replace('paint_vertex', 'window.paint_vertex')
     code = code.replace('paint_edge', 'window.paint_edge')
 
-    lines = [line for line in code.split('\n') if line.strip() != '']
-    formatted = TEMPLATE
-    formatted += 'async def main():\n'
     line_number = 0
+    lines = [line for line in code.split('\n') if line.strip() != '']
+    formatted = "from browser import document, window, aio\n"
+    formatted += "GRAPH = window.graph.to_dict()\n"
+    formatted += 'async def main():\n'
+
     for line in lines:
         indentation = ' ' * ((len(line) - len(line.lstrip())))
         formatted += '{}while ((not window.step and window.paused) or (window.step and window.step != window.highlightedLine)): await aio.sleep(0.1)\n'.format(
@@ -36,14 +40,6 @@ def format_code(code, delay):
 
     formatted += 'aio.run(main())'
     return formatted
-
-
-TAB = ' ' * 4
-TEMPLATE = """from browser import document, window, aio
-
-GRAPH = window.graph.to_dict()
-
-"""
 
 
 def run(event):

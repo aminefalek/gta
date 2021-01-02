@@ -4,7 +4,7 @@
         <title>GTA</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="icon" type="image/png" href="icons/network.svg" />
+        <link rel="icon" type="image/png" href="icons/logo.svg" />
 
         <!-- Main Stylesheet-->
         <link rel="stylesheet" href="style.css">
@@ -111,10 +111,9 @@
 
                 <div id="menu">
                     <div class="grid-container">
-                        <img src="icons/graph.png" class="grid-item-logo">
-                        <h5 class="grid-item-title" style="color: rebeccapurple;">Graph Theory App</h5>
-                        <p class="grid-item-user">Hello <%= name %>,</p>
+                        <img src="icons/logo.svg" class="grid-item-logo">
                         <form action="/logout?_method=DELETE" method="POST" class="grid-item-logout">
+                            <p>Hello <%= name %>,</p>
                             <button type="submit" class="btn btn-link btn-sm" style="color: rebeccapurple;">logout</button>
                         </form>
                     </div>
