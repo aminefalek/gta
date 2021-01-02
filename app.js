@@ -11,6 +11,7 @@ const methodOverride = require('method-override')
 const mongoose = require('mongoose')
 const User = require('./models/User')
 const Graph = require('./models/Graph')
+const Script = require('./models/Script')
 const app = express()
 
 const dbURI = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@gta.eldo9.mongodb.net/gta?retryWrites=true&w=majority`
@@ -86,7 +87,7 @@ function checkNotAuthenticated(req, res, next) {
 }
 
 app.post('/save-graph', (req, res) => {    
-    Graph.findOne({ name: req.body.name}, (err, graph) => {
+    Graph.findOne({ name: req.body.name }, (err, graph) => {
         if (graph) {
             graph.name = req.body.name
             graph.graph = req.body.graph
@@ -130,4 +131,33 @@ app.post('/load-graph-names', (req, res) => {
         });
         res.json(graphNames);
     });
+})
+
+app.post('/save-script', (req, res) => {
+    Script.findOne({ name: req.body.name }, (err, script) => {
+        if (script) {
+            script.name = req.body.name
+            script.code = req.body.code
+            script.save()
+                .then((result) => {
+                    res.json({status: 'script added to database'})
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        } else {
+            const script = new Script({
+                userId: req.user.id,
+                name: req.body.name,
+                code: req.body.code,
+            })
+            script.save()
+                .then((result) => {
+                    res.json({status: 'script added to database'})
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
+    })
 })
