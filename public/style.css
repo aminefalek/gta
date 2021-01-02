@@ -284,6 +284,14 @@ button:focus {
     grid-area: logout;
 }
 
+#color1,
+#color2,
+#color3 {
+    max-width: 28px;
+    padding: 4px;
+    margin: 2px;
+}
+
 #dropdown-graph,
 #save-graph {
     margin-top: 4px;
