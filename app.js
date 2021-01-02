@@ -13,7 +13,7 @@ const User = require('./models/User')
 const Graph = require('./models/Graph')
 const app = express()
 
-const dbURI = 'mongodb+srv://amine:BellmanFord1@gta.eldo9.mongodb.net/gta?retryWrites=true&w=majority'
+const dbURI = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@gta.eldo9.mongodb.net/gta?retryWrites=true&w=majority`
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
         .then((result) => app.listen(3000, () => console.log("listening at 3000")))
         .catch((error) => console.log(error))
