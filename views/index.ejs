@@ -10,8 +10,11 @@
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="radio-style.css">
 
-        <!-- Bootstrap 4 -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        <!-- Bootstrap 5 -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"rel="stylesheet"
+            integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">		
@@ -91,11 +94,11 @@
             <div class="resizer" data-direction="horizontal"></div>
 
             <div id="center-canvas" class="input-group-sm">
-                <select class="custom-select" id="vertex-select">
+                <select id="vertex-select" class="form-select form-select-sm">
                     <option selected>graph</option>
                 </select>
-                <div class="input-group-append">
-                    <button class="btn btn-secondary btn-sm" onclick="center()">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="center()">
                         <i class="fa fa-search"></i>
                     </button>
                 </div>
@@ -121,22 +124,20 @@
                     <div id="navigation">
 
                         <div id="dropdown-graph" class="input-group input-group-sm">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">Graph</span>
-                            </div>
-                            <select id="dropdown" class="custom-select">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Graph</span>
+                            <select id="dropdown" class="form-select form-select-sm">
                                 <option selected></option>
                             </select>
                             <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-secondary btn-sm" onclick="loadGraph()">load</button>
-                                <button type="button" class="btn btn-secondary btn-sm" onclick="clearGraph()">clear</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="loadGraph()">load</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="clearGraph()">clear</button>
                             </div>
                         </div>
 
                         <div id="save-graph" class="input-group input-group-sm">
-                            <input id="save" type="text" class="form-control" placeholder="graph name" aria-label="graph name" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" onclick="saveGraph()">save</button>
+                            <input id="save" class="form-control form-control-sm" type="text" placeholder="graph-name">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="saveGraph()">save</button>
                             </div>
                         </div>
 
