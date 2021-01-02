@@ -292,6 +292,11 @@ button:focus {
     margin: 2px;
 }
 
+#script-dropdown {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
 #dropdown-graph,
 #save-graph {
     margin-top: 4px;

@@ -289,11 +289,22 @@ function addNode(id) {
     ]);
 }
 
+function getColor(color) {
+    if (color == 'color1') {
+        return COLOR_PICKER_1_UI.value;
+    } else if (color == 'color2') {
+        return COLOR_PICKER_2_UI.value;
+    } else if (color == 'color3') {
+        return COLOR_PICKER_3_UI.value;
+    }
+    return color
+}
+
 //? Accessible to python coding interface
 function paint_vertex(id, color, timeout=null) {
     cy.$(`#${id}`).animation({
         style: {
-            'background-color': color
+            'background-color': getColor(color)
         },
         duration: 100
     }).play();
@@ -308,8 +319,8 @@ function paint_edge(source, target, color, timeout=null) {
     var edge = cy.elements(`edge[source = "${source}"][target = "${target}"]`);
     edge.animation({
         style: {
-            'line-color': color,
-            'target-arrow-color': color
+            'line-color': getColor(color),
+            'target-arrow-color': getColor(color)
         }
     }).play();
 
@@ -504,17 +515,20 @@ const RUN_BUTTON_UI       = document.getElementById('run-button');
 const STEP_BUTTON_UI      = document.getElementById('step-button');
 const STOP_BUTTON_UI      = document.getElementById('stop-button');
 const SLIDER_UI           = document.getElementById('slider');
+const COLOR_PICKER_1_UI   = document.getElementById('color1');
+const COLOR_PICKER_2_UI   = document.getElementById('color2');
+const COLOR_PICKER_3_UI   = document.getElementById('color3');
 const CONSOLE_UI          = document.getElementById('console');
 const SWITCH_UI           = document.getElementById('switch');
 const CODE_MIRROR         = CodeMirror(NAVBAR_UI, {
     value: 
 `for v in GRAPH:
     print('vertex: ' + v)
-    paint_vertex(v, 'yellow')
+    paint_vertex(v, 'color1')
     for edge in GRAPH[v]:
         w = edge['head']
         print('edge: ({}, {})'.format(v, w))
-        paint_edge(v, w, 'blue')`,
+        paint_edge(v, w, 'color2')`,
 
     mode: "python",
     theme: "monokai",
@@ -692,7 +706,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 const LEARN_BUTTON_UI = document.createElement("a");
 LEARN_BUTTON_UI.innerHTML = "learn";
-LEARN_BUTTON_UI.className = 'badge badge-primary';
+LEARN_BUTTON_UI.className = 'badge bg-primary';
 LEARN_BUTTON_UI.onclick = function() {
     collapseRightSidebar();
     collapseLeftSidebar();
@@ -703,7 +717,7 @@ LEARN_BUTTON_UI.onclick = function() {
 
 const CODE_BUTTON_UI = document.createElement("a");
 CODE_BUTTON_UI.innerHTML = "code";
-CODE_BUTTON_UI.className = 'badge badge-danger';
+CODE_BUTTON_UI.className = 'badge bg-danger';
 CODE_BUTTON_UI.onclick = function() {
     collapseRightSidebar();
     openLeftSidebar();
