@@ -8,7 +8,6 @@
 
         <!-- Main Stylesheet-->
         <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="radio-style.css">
 
         <!-- Bootstrap 5 -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"rel="stylesheet"
@@ -75,8 +74,8 @@
                 <div class="resizer" data-direction="vertical"></div>
 
                 <!-- Control panel -->
-                <div id="script-select" class="input-group">
-                    <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <div id="scripts" class="input-group">
+                    <select id="scripts-select" class="form-select form-select-sm" aria-label=".form-select-sm example">
                         <option value="0" selected>custom</option>
                         <option value="1">dfs</option>
                         <option value="2">bfs</option>
@@ -89,15 +88,15 @@
                         <option value="9">double-dfs</option>
                         <option value="10">kosaraju</option>
                     </select>
-                    <button class="btn btn-primary btn-sm" type="button">
+                    <button class="btn btn-primary btn-sm" type="button" onclick="loadScript()">
                         <i class="fa fa-download"></i>
                     </button>
-                    <input type="text" class="form-control form-control-sm" placeholder="script-name">
-                    <button class="btn btn-primary btn-sm" type="button">
+                    <input id="save-script-input" type="text" class="form-control form-control-sm" placeholder="script-name">
+                    <button class="btn btn-primary btn-sm" type="button" onclick="saveScript()">
                         <i class="fa fa-save"></i>
                     </button>
                 </div>
-                
+
                 <div id="control">                    
                     <div class="btn-group">
                         <button id="run-button" type="button" class="btn btn-light btn-sm"><i class="fa fa-play"></i></button>
@@ -149,9 +148,9 @@
                     
                     <div id="navigation">
 
-                        <div id="dropdown-graph" class="input-group input-group-sm">
+                        <div id="graphs" class="input-group input-group-sm">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Graph</span>
-                            <select id="dropdown" class="form-select form-select-sm">
+                            <select id="graphs-select" class="form-select form-select-sm">
                                 <option selected></option>
                             </select>
                             <div class="btn-group" role="group">
@@ -161,7 +160,7 @@
                         </div>
 
                         <div id="save-graph" class="input-group input-group-sm">
-                            <input id="save" class="form-control form-control-sm" type="text" placeholder="graph-name">
+                            <input id="save-graph-input" class="form-control form-control-sm" type="text" placeholder="graph-name">
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-outline-primary btn-sm" onclick="saveGraph()">save</button>
                             </div>

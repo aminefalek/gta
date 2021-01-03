@@ -466,7 +466,6 @@ async function loadGraphNames() {
         var option = document.createElement("option");
         option.text = name;
         GRAPH_DROPDOWN_UI.add(option);
-        console.log(name);
     });
     
     GRAPH_DROPDOWN_UI.value = graphNames[0];
@@ -478,14 +477,53 @@ async function saveScript() {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({'name': '', 
-                              'code': CODE_MIRROR.value
+        body: JSON.stringify({'name': SCRIPT_SAVE_UI.value,
+                              'code': CODE_MIRROR.getValue()
                             })
     };
 
     await fetch('/save-script', options).then(response => {
         setTimeout(saveScript, 15000);
     });
+}
+
+async function loadScript() {
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ 'name': SCRIPT_DROPDOWN_UI.options[SCRIPT_DROPDOWN_UI.selectedIndex].text })
+    };
+
+    const response = await fetch('/load-script', options);
+    data = await response.json();
+    script = data['code'];
+    CODE_MIRROR.setValue(script);
+}
+
+async function loadScriptNames() {
+    for (i = SCRIPT_DROPDOWN_UI.options.length - 1; i >= 0; i--) {
+        SCRIPT_DROPDOWN_UI.options[i] = null;
+    }
+
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+    };
+    
+    const response = await fetch('/load-script-names', options);
+    var scriptNames = await response.json();
+    
+    scriptNames.forEach(name => {
+        var option = document.createElement("option");
+        option.text = name;
+        SCRIPT_DROPDOWN_UI.add(option);
+    });
+    
+    GRAPH_DROPDOWN_UI.value = scriptNames[0];
 }
 
 window.clearGraph = function clearGraph() {
@@ -525,8 +563,10 @@ var paused = true;
 var highlightedLine = 0;
 var step = null;
 
-const GRAPH_DROPDOWN_UI   = document.getElementById('dropdown');
-const GRAPH_SAVE_UI       = document.getElementById('save');
+const GRAPH_DROPDOWN_UI   = document.getElementById('graphs-select');
+const GRAPH_SAVE_UI       = document.getElementById('save-graph-input');
+const SCRIPT_DROPDOWN_UI  = document.getElementById('scripts-select');
+const SCRIPT_SAVE_UI      = document.getElementById('save-script-input');
 const VERTEX_SELECTION_UI = document.getElementById("vertex-select");
 const RADIO_BUTTONS_UI    = document.getElementsByName('algorithms');
 const NAVBAR_UI           = document.getElementById("navbar");
@@ -575,7 +615,6 @@ RUN_BUTTON_UI.onclick = function() {
 }
 
 STEP_BUTTON_UI.onclick = function() {
-    console.log(graph);
     step = highlightedLine;
     RUN_BUTTON_UI.firstChild.classList.remove('fa-pause');
 };
@@ -761,4 +800,5 @@ for(i = 0; i < RADIO_BUTTONS_UI.length; i++) {
 
 initializeWeightInputUI();
 loadGraphNames();
+loadScriptNames();
 initialize();

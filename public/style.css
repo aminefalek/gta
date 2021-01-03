@@ -301,7 +301,7 @@ button:focus {
     margin-left: 10px;
 }
 
-#dropdown-graph,
+#graphs,
 #save-graph {
     margin-top: 4px;
     margin-bottom: 4px;
@@ -317,7 +317,7 @@ button:focus {
     text-align: center;
 }
 
-#script-select {
+#scripts {
     padding: 10px;
     border-top: thick double black;
     background-color: seashell;

@@ -87,7 +87,7 @@ function checkNotAuthenticated(req, res, next) {
 }
 
 app.post('/save-graph', (req, res) => {    
-    Graph.findOne({ name: req.body.name }, (err, graph) => {
+    Graph.findOne({ userId: req.user.id, name: req.body.name }, (err, graph) => {
         if (graph) {
             graph.name = req.body.name
             graph.graph = req.body.graph
@@ -118,7 +118,7 @@ app.post('/save-graph', (req, res) => {
 })
 
 app.post('/load-graph', (req, res) => {
-    Graph.findOne({ name: req.body.name }, (err, graph) => {
+    Graph.findOne({ userId: req.user.id, name: req.body.name }, (err, graph) => {
         res.json(graph);
     });
 })
@@ -134,9 +134,8 @@ app.post('/load-graph-names', (req, res) => {
 })
 
 app.post('/save-script', (req, res) => {
-    Script.findOne({ name: req.body.name }, (err, script) => {
+    Script.findOne({ userId: req.user.id, name: req.body.name }, (err, script) => {
         if (script) {
-            script.name = req.body.name
             script.code = req.body.code
             script.save()
                 .then((result) => {
@@ -160,4 +159,20 @@ app.post('/save-script', (req, res) => {
                 })
         }
     })
+})
+
+app.post('/load-script', (req, res) => {
+    Script.findOne({userId: req.user.id, name: req.body.name }, (err, script) => {
+        res.json(script);
+    });
+})
+
+app.post('/load-script-names', (req, res) => {
+    Script.find({ userId: req.user.id }, (err, scripts) => {
+        let scriptNames = []
+        scripts.forEach(script => {
+            scriptNames.push(script['name'])
+        });
+        res.json(scriptNames);
+    });
 })
