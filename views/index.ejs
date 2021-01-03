@@ -63,18 +63,6 @@
             <!-- Left sidebar -->
             <div id="sidebar-left">
                 <!-- Placeholder for CodeMirror -->
-                <nav id="script-dropdown" class="navbar sticky-top">
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text">Script</span>
-                        <select class="form-select form-select-sm">
-                            <option selected></option>
-                        </select>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-secondary btn-sm">save</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm">clear</button>
-                        </div>
-                    </div>
-                </nav>
                 <nav id="navbar">
                     <div class="custom-menu">
                         <button type="button" id="collapse-left" class="btnc btnc-primary">
@@ -87,7 +75,30 @@
                 <div class="resizer" data-direction="vertical"></div>
 
                 <!-- Control panel -->
-                <div id="control">
+                <div id="script-select" class="input-group">
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                        <option value="0" selected>custom</option>
+                        <option value="1">dfs</option>
+                        <option value="2">bfs</option>
+                        <option value="3">prim</option>
+                        <option value="4">kruskal</option>
+                        <option value="5">dijkstra</option>
+                        <option value="6">bellman-ford</option>
+                        <option value="7">floyd-warshall</option>
+                        <option value="8">kahn</option>
+                        <option value="9">double-dfs</option>
+                        <option value="10">kosaraju</option>
+                    </select>
+                    <button class="btn btn-primary btn-sm" type="button">
+                        <i class="fa fa-download"></i>
+                    </button>
+                    <input type="text" class="form-control form-control-sm" placeholder="script-name">
+                    <button class="btn btn-primary btn-sm" type="button">
+                        <i class="fa fa-save"></i>
+                    </button>
+                </div>
+                
+                <div id="control">                    
                     <div class="btn-group">
                         <button id="run-button" type="button" class="btn btn-light btn-sm"><i class="fa fa-play"></i></button>
                         <button id="step-button" type="button" class="btn btn-light btn-sm"><i class="fa fa-step-forward"></i></button>
@@ -99,7 +110,7 @@
                     <input type="color" class="form-control form-control-color-sm" id="color1" value="#28c361" title="color 1">
                     <input type="color" class="form-control form-control-color-sm" id="color2" value="#f6cb16" title="color 2">
                     <input type="color" class="form-control form-control-color-sm" id="color3" value="#e73f22" title="color 3">
-                </div>                
+                </div>
 
                 <!-- Console -->
                 <textarea readonly class="form-control" id="console"></textarea>
@@ -156,12 +167,9 @@
                             </div>
                         </div>
 
-                        <div id="edit-graph">
-                            <div id="switch" onclick="this.classList.toggle('hover'); editMode()">
-                                <div id="toggle">
-                                </div>
-                            </div>
-                            <h7 class="small font-italic">edit mode</h7>
+                        <div class="form-check form-switch" onclick="editMode()">
+                            <input class="form-check-input" type="checkbox" id="edit-mode-switch">
+                            <label class="small font-italic text-muted" for="edit-mode-switch">edit mode</label>
                         </div>
                     </div>
                     
@@ -169,50 +177,54 @@
                     <div id="accordion" class="accordion">
 
                         <h3>GRAPH SEARCH</h3>
-                        <input type="radio" name="algorithms" id="radio1">
-                        <label for="radio1">Depth First Search
-                        </label>
-
-                        <input type="radio" name="algorithms" id="radio2">
-                        <label for="radio2">Breadth First Search
-                        </label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="algorithms" id="0" onclick="checkbox(this.id)">
+                            <label class="form-check-label" for="0">Depth First Search</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="algorithms" id="1" onclick="checkbox(this.id)">
+                            <label class="form-check-label" for="1">Breadth First Search</label>
+                        </div>
 
                         <h3>SPANNING TREE</h3>
-                        <input type="radio" name="algorithms" id="radio3">
-                        <label for="radio3">Prim
-                        </label>
-
-                        <input type="radio" name="algorithms" id="radio4">
-                        <label for="radio4">Kruskal
-                        </label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="algorithms" id="2" onclick="checkbox(this.id)">
+                            <label class="form-check-label" for="2">Prim</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="algorithms" id="3" onclick="checkbox(this.id)">
+                            <label class="form-check-label" for="3">Kruskal</label>
+                        </div>
 
                         <h3>SHORTEST PATH</h3>
-
-                        <input type="radio" name="algorithms" id="radio5">
-                        <label for="radio5">Dijkstra
-                        </label>
-
-                        <input type="radio" name="algorithms" id="radio6">
-                        <label for="radio6">Bellman-Ford
-                        </label>
-
-                        <input type="radio" name="algorithms" id="radio7">
-                        <label for="radio7">Floyd-Warshall
-                        </label>                      
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="algorithms" id="4" onclick="checkbox(this.id)">
+                            <label class="form-check-label" for="4">Dijkstra</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="algorithms" id="5" onclick="checkbox(this.id)">
+                            <label class="form-check-label" for="5">Bellman-Ford</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="algorithms" id="6" onclick="checkbox(this.id)">
+                            <label class="form-check-label" for="6">Floyd-Warshall</label>
+                        </div>                   
 
                         <h3>TOPOLOGICAL SORT</h3>
-                        <input type="radio" name="algorithms" id="radio8">
-                        <label for="radio8">Kahn
-                        </label>
-
-                        <input type="radio" name="algorithms" id="radio9">
-                        <label for="radio9">Double DFS
-                        </label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="algorithms" id="7" onclick="checkbox(this.id)">
+                            <label class="form-check-label" for="7">Kahn</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="algorithms" id="8" onclick="checkbox(this.id)">
+                            <label class="form-check-label" for="8">Double DFS</label>
+                        </div>
 
                         <h3>CONNECTED COMPONENTS</h3>
-                        <input type="radio" name="algorithms" id="radio10">
-                        <label for="radio10">Kosaraju
-                        </label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="algorithms" id="9" onclick="checkbox(this.id)">
+                            <label class="form-check-label" for="9">Kosaraju</label>
+                        </div>
 
                     </div>
                 </div>

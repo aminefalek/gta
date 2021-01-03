@@ -420,8 +420,7 @@ async function saveGraph() {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({'type':'save',
-                              'name': GRAPH_SAVE_UI.value, 
+        body: JSON.stringify({'name': GRAPH_SAVE_UI.value, 
                               'graph': graph,
                               'layout': getNodePositions()})
     };
@@ -473,6 +472,22 @@ async function loadGraphNames() {
     GRAPH_DROPDOWN_UI.value = graphNames[0];
 }
 
+async function saveScript() {
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({'name': '', 
+                              'code': CODE_MIRROR.value
+                            })
+    };
+
+    await fetch('/save-script', options).then(response => {
+        setTimeout(saveScript, 15000);
+    });
+}
+
 window.clearGraph = function clearGraph() {
     cy.elements().remove();
     graph = {};
@@ -485,6 +500,16 @@ window.center = function center() {
         cy.center();
     } else {
         cy.center(cy.$('#' + id));
+    }
+}
+
+function checkbox(id) {
+    for (var i=0; i < RADIO_BUTTONS_UI.length; i++) {
+        if (i == id && RADIO_BUTTONS_UI[i].checked){
+            RADIO_BUTTONS_UI[i].checked = true;
+        } else {
+            RADIO_BUTTONS_UI[i].checked = false;
+        }
     }
 }
 
