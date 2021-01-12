@@ -530,6 +530,9 @@ table th {
     text-align: center;
     font-size: 12px;
 }
+table input:focus {
+    outline: none;
+}
 table td input {
     position: absolute;
     display: block;

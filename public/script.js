@@ -73,6 +73,10 @@ const LAYOUT = {
     name: "preset",
 };
 
+const LAYOUT_GRID = {
+    name: "grid",
+};
+
 function initialize() {
     cy = cytoscape({
         container: document.getElementById("whiteboard"),
@@ -207,6 +211,56 @@ function initialize() {
     eh.disable();
 }
 
+function drawRandomGraph() {
+    generateRandomGraph(
+        GRAPH_SIZE_UI.value,
+        GRAPH_DENSITY_UI.value,
+        GRAPH_MIN_WEIGHT_UI.value,
+        GRAPH_MAX_WEIGHT_UI.value
+    );
+    drawGraph(null);
+}
+
+function generateRandomGraph(size, density, edgeCostMin, edgeCostMax) {
+    graph = {};
+    for (var i = 0; i < size; i++) {
+        addNode(i);
+    }
+    for (var i = 0; i < size; i++) {
+        for (var j = 0; j < size; j++) {
+            if (i != j && Math.random() < density) {
+                addEdge(i, j, getRandomInt(edgeCostMin, edgeCostMax));
+            }
+        }
+    }
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function addNode(node) {
+    graph[node] = [];
+    nodeId++;
+}
+
+function addEdge(tail, head, cost) {
+    if (tail in graph && head in graph && !edgeExists(tail, head)) {
+        graph[tail].push({ head: head, cost: cost });
+    }
+}
+
+function edgeExists(tail, head) {
+    for (var i = 0; i < graph[tail].length; i++) {
+        if (graph[tail][i]["head"] == head) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function resetSelection() {
     cy.$(":selected").style({ "background-color": "black" });
     cy.$(":selected").unselect();
@@ -309,10 +363,6 @@ function updateVerticesList() {
     });
 }
 
-function addNode(id) {
-    cy.add([{ group: "nodes", data: { id: id } }]);
-}
-
 function getColor(color) {
     if (color == "color1") {
         return COLOR_PICKER_1_UI.value;
@@ -367,32 +417,61 @@ function clearGraph() {
 
 function drawGraph(layout) {
     var elements = [];
-    var coordinates = getNodeCoordinates(layout);
 
-    Object.keys(graph).forEach(function (tail) {
-        elements.push({
-            group: "nodes",
-            data: { id: tail },
-            position: { x: coordinates[tail]["x"], y: coordinates[tail]["y"] },
-        });
-        graph[tail].forEach(function (edge) {
+    if (layout) {
+        var coordinates = getNodeCoordinates(layout);
+        Object.keys(graph).forEach(function (tail) {
             elements.push({
-                group: "edges",
-                data: {
-                    source: tail,
-                    target: edge["head"],
-                    cost: edge["cost"],
+                group: "nodes",
+                data: { id: tail },
+                position: {
+                    x: coordinates[tail]["x"],
+                    y: coordinates[tail]["y"],
                 },
             });
+            graph[tail].forEach(function (edge) {
+                elements.push({
+                    group: "edges",
+                    data: {
+                        source: tail,
+                        target: edge["head"],
+                        cost: edge["cost"],
+                    },
+                });
+            });
         });
-    });
-    nodeId = Object.keys(graph).length;
+        nodeId = Object.keys(graph).length;
 
-    cy.elements().remove();
-    cy.add(elements);
-    var layout = cy.elements().makeLayout(LAYOUT);
-    layout.run();
-    cy.center();
+        cy.elements().remove();
+        cy.add(elements);
+        var layout = cy.elements().makeLayout(LAYOUT);
+        layout.run();
+        cy.center();
+    } else {
+        Object.keys(graph).forEach(function (tail) {
+            elements.push({
+                group: "nodes",
+                data: { id: tail },
+            });
+            graph[tail].forEach(function (edge) {
+                elements.push({
+                    group: "edges",
+                    data: {
+                        source: tail,
+                        target: edge["head"],
+                        cost: edge["cost"],
+                    },
+                });
+            });
+        });
+        nodeId = Object.keys(graph).length;
+
+        cy.elements().remove();
+        cy.add(elements);
+        var layout = cy.elements().makeLayout(LAYOUT_GRID);
+        layout.run();
+        cy.center();
+    }
 }
 
 function highlightLine(line) {
@@ -634,6 +713,10 @@ const COLOR_PICKER_2_UI = document.getElementById("color2");
 const COLOR_PICKER_3_UI = document.getElementById("color3");
 const CONSOLE_UI = document.getElementById("console");
 const SWITCH_UI = document.getElementById("switch");
+const GRAPH_SIZE_UI = document.getElementById("graph-size-input");
+const GRAPH_DENSITY_UI = document.getElementById("graph-density-input");
+const GRAPH_MIN_WEIGHT_UI = document.getElementById("graph-min-weight-input");
+const GRAPH_MAX_WEIGHT_UI = document.getElementById("graph-max-weight-input");
 const CODE_MIRROR = CodeMirror(NAVBAR_UI, {
     value: `for v in GRAPH:
     print('vertex: ' + v)
@@ -825,4 +908,5 @@ document.addEventListener("DOMContentLoaded", function () {
 initializeWeightInputUI();
 loadGraphNames();
 loadScriptNames();
+collapseLeftSidebar();
 initialize();

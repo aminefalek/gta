@@ -200,28 +200,28 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th class="col-md-2 align-middle">size</th>
-                                            <th class="col-md-2">sparsness</th>
+                                            <th class="col-md-2">density</th>
                                             <th class="col-md-4" colspan="2">edge weight</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><input type="number" placeholder="8"></td>
-                                            <td><input type="number" placeholder="0.5"></td>
-                                            <td><input type="number" placeholder="min"></td>
-                                            <td><input type="number" placeholder="max"></td>
+                                            <td><input id="graph-size-input" type="number" placeholder="[2, 50]"></td>
+                                            <td><input id="graph-density-input" type="number" placeholder="[0,1]"></td>
+                                            <td><input id="graph-min-weight-input" type="number" placeholder="min"></td>
+                                            <td><input id="graph-max-weight-input" type="number" placeholder="max"></td>
                                         </tr>
                                         <tr>
                                             <td></td>
                                         </tr>
                                     </tbody>
                                 </table>
-                                <button type="button" class="btn btn-primary btn-sm">draw random graph</button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="drawRandomGraph()">draw random graph</button>
                               </div>
                         </div>
                     </div>
-                    
-                    <hr/>
+
+                    <br>
                     
                     <!-- Accordion -->
                     <div id="accordion" class="accordion">
