@@ -46,6 +46,7 @@ app.get('/', checkAuthenticated, (req, res) => {
 })
 
 app.get('/login', checkNotAuthenticated, (req, res) => {
+	console.log("get rekt")
 	res.render('login.ejs')
 })
 
@@ -87,16 +88,18 @@ app.post('/gsign', checkNotAuthenticated, async (req, res) => {
 	if(email == user_gmail && user_name == name && googleid == user_gid){
 		console.log('ok')
 	} else {
+		console.log("Google not ok")
 		return res.redirect('/login')
 	}
 
 
 	User.findOne({email:user_gmail, name:user_name, guser: true}, (err, user) => {
 		if(user){
+			console.log("User found in DB")
 			return res.redirect(307, "/login")
 		} else {
 			const user = new User({
-				name: username, 
+				name: user_name, 
 				email: user_gmail,
 				guser: true,
 				password: idToken
@@ -104,9 +107,11 @@ app.post('/gsign', checkNotAuthenticated, async (req, res) => {
 			
 			user.save()
 				.then((result) => {
-					return res.redirect(307, '/')
+					console.log("User saved in DB")
+					return res.redirect(307, '/login')
 				})
 				.catch((error) => {
+					console.debug("Couldn't add to db")
 					return res.redirect('/login')
 				})
 		}
