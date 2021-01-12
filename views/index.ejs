@@ -165,29 +165,63 @@
                     </nav>
                     
                     <div id="navigation">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-outline-secondary" onclick="loadGraph()">load</button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="clearGraph()">clear</button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="saveGraph()">save</button>   
+                        </div>
+                        
+                        <div class="btn-group btn-group-sm" role="group">
+                            <input type="radio" class="btn-check" name="code-learn" id="code-button" checked>
+                            <label class="btn btn-outline-primary" for="code-button">code</label>
+                            
+                            <input type="radio" class="btn-check" name="code-learn" id="learn-button">
+                            <label class="btn btn-outline-primary" for="learn-button">learn</label>
+                        </div>
+
                         <div id="graphs" class="input-group input-group-sm">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Graph</span>
                             <select id="graphs-select" class="form-select form-select-sm">
                                 <option selected></option>
                             </select>
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="loadGraph()">load</button>
-                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="clearGraph()">clear</button>
-                            </div>
                         </div>
 
                         <div id="save-graph" class="input-group input-group-sm">
                             <input id="save-graph-input" class="form-control form-control-sm" type="text" placeholder="graph-name">
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="saveGraph()">save</button>
-                            </div>
                         </div>
 
-                        <div class="form-check form-switch">
+                        <div id="edit-mode" class="form-check" data-bs-toggle="collapse" data-bs-target="#collapse" aria-expanded="false">
                             <input class="form-check-input" type="checkbox" id="edit-mode-switch" onclick="editMode()">
-                            <label class="small font-italic text-muted" for="edit-mode-switch">edit mode</label>
+                            <label class="small text-muted" for="edit-mode-switch">edit mode</label>
+                        </div>
+                        <div class="collapse" id="collapse">
+                            <div class="card text-center">
+                                <table class="table table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="col-md-2 align-middle">size</th>
+                                            <th class="col-md-2">sparsness</th>
+                                            <th class="col-md-4" colspan="2">edge weight</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="number" placeholder="8"></td>
+                                            <td><input type="number" placeholder="0.5"></td>
+                                            <td><input type="number" placeholder="min"></td>
+                                            <td><input type="number" placeholder="max"></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn btn-primary btn-sm">draw random graph</button>
+                              </div>
                         </div>
                     </div>
+                    
+                    <hr/>
                     
                     <!-- Accordion -->
                     <div id="accordion" class="accordion">
@@ -202,6 +236,8 @@
                             <label class="form-check-label" for="1">Breadth First Search</label>
                         </div>
 
+                        <hr/>
+
                         <h3>SPANNING TREE</h3>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="algorithms" id="2" onclick="checkbox(this.id)">
@@ -211,6 +247,8 @@
                             <input class="form-check-input" type="checkbox" name="algorithms" id="3" onclick="checkbox(this.id)">
                             <label class="form-check-label" for="3">Kruskal</label>
                         </div>
+
+                        <hr/>
 
                         <h3>SHORTEST PATH</h3>
                         <div class="form-check">
@@ -224,7 +262,9 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="algorithms" id="6" onclick="checkbox(this.id)">
                             <label class="form-check-label" for="6">Floyd-Warshall</label>
-                        </div>                   
+                        </div>
+                        
+                        <hr/>
 
                         <h3>TOPOLOGICAL SORT</h3>
                         <div class="form-check">
@@ -235,6 +275,8 @@
                             <input class="form-check-input" type="checkbox" name="algorithms" id="8" onclick="checkbox(this.id)">
                             <label class="form-check-label" for="8">Double DFS</label>
                         </div>
+
+                        <hr/>
 
                         <h3>CONNECTED COMPONENTS</h3>
                         <div class="form-check">

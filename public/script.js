@@ -414,8 +414,6 @@ function editMode() {
             RADIO_BUTTONS_UI[i].disabled = true;
             RADIO_BUTTONS_UI[i].checked = false;
         }
-        LEARN_BUTTON_UI.hidden = true;
-        CODE_BUTTON_UI.hidden = true;
     } else {
         COLLAPSE_LEFT_UI.disabled = false;
         eh.disable();
@@ -823,35 +821,6 @@ document.addEventListener("DOMContentLoaded", function () {
         resizable(ele);
     });
 });
-
-const LEARN_BUTTON_UI = document.createElement("a");
-LEARN_BUTTON_UI.innerHTML = "learn";
-LEARN_BUTTON_UI.className = "badge bg-primary";
-LEARN_BUTTON_UI.onclick = function () {
-    collapseRightSidebar();
-    collapseLeftSidebar();
-    PLAYER_UI.style.visibility = "visible";
-    dijkstra(graph, 0);
-};
-
-const CODE_BUTTON_UI = document.createElement("a");
-CODE_BUTTON_UI.innerHTML = "code";
-CODE_BUTTON_UI.className = "badge bg-danger";
-CODE_BUTTON_UI.onclick = function () {
-    collapseRightSidebar();
-    openLeftSidebar();
-};
-
-for (i = 0; i < RADIO_BUTTONS_UI.length; i++) {
-    RADIO_BUTTONS_UI[i].nextElementSibling.onclick = function () {
-        if (!this.previousElementSibling.hasAttribute("disabled")) {
-            this.appendChild(LEARN_BUTTON_UI);
-            this.appendChild(CODE_BUTTON_UI);
-            LEARN_BUTTON_UI.hidden = false;
-            CODE_BUTTON_UI.hidden = false;
-        }
-    };
-}
 
 initializeWeightInputUI();
 loadGraphNames();

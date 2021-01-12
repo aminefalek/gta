@@ -45,11 +45,6 @@ h7 {
 
 /* Sidebars */
 
-.btn {
-    margin-right: 2px;
-    margin-left: 2px;
-}
-
 .btnc {
     display: inline-block;
     font-weight: 400;
@@ -109,8 +104,8 @@ button:focus {
 #sidebar-right {
     margin-left: auto;
     margin-right: 0;
-    min-width: 16%;
-    max-width: 16%;
+    min-width: 252px;
+    max-width: 252px;
     min-height: 100vh;
     max-height: 100vh;
     padding: 8px;
@@ -332,6 +327,9 @@ button:focus {
     width: 100%;
     text-align: left;
 }
+#accordion h3 {
+    padding-top: 0;
+}
 
 .btn.btn-secondary[disabled] {
     color: grey;
@@ -518,4 +516,35 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .highlighted-line {
     background-color: rgba(255, 251, 0, 0.151);
+}
+
+.navigation-buttons {
+    margin-top: 5px;
+    display: flex;
+}
+
+table td {
+    position: relative;
+}
+table th {
+    text-align: center;
+    font-size: 12px;
+}
+table td input {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 32px;
+    margin: 0;
+    border: none;
+    text-align: center;
+}
+.card-body {
+    border: none;
+}
+
+#edit-mode {
+    width: fit-content;
 }
