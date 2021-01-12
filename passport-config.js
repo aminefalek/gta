@@ -3,14 +3,20 @@ const bcrypt = require('bcrypt')
 const User = require('./models/User');
 
 function initialize(passport) {
-    const authenticateUser = async (email, password, done) => {
-         // Match user
-        User.findOne({ email: email })
+    const authenticateUser = async (req, email, password, done) => {
+		 // Match user
+		 console.log('in auth')
+		// eturn done(null,user)
+        User.findOne({ email: email, guser: req.body.guser })
             .then(user => {
                 if (!user) {
                     return done(null, false, { message: 'That email is not registered' });
-                }
-
+				}
+				console.log(req.body)
+				if(req.body.guser){
+					console.log('ok because google')
+					return done(null,user)
+				}
                 // Match password
                 bcrypt.compare(password, user.password, (err, isMatch) => {
                     if (err) throw err;
@@ -22,7 +28,7 @@ function initialize(passport) {
                 })
             })
     }
-    passport.use(new localStrategy({ usernameField: 'email' }, authenticateUser))
+    passport.use(new localStrategy({ usernameField: 'email', passReqToCallback: true }, authenticateUser))
     passport.serializeUser((user, done) => done(null, user.id))
     passport.deserializeUser((id, done) => {
         User.findById(id, (err, user) => {

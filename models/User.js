@@ -13,7 +13,11 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true
-    }
+	},
+	guser: {
+		type: Boolean,
+		default: false
+	}
 }, { timestamps: true })
 
 const User = mongoose.model('User', userSchema)

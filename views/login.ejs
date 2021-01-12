@@ -7,33 +7,35 @@
         <link rel="icon" type="image/png" href="icons/network.svg" />
         <link rel="stylesheet" href="login.css">
         <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<meta name="google-signin-client_id" content="476770881781-parha044dq82dih9am4rb8ul5fou6bc9.apps.googleusercontent.com">
+		<script src="https://apis.google.com/js/api.js"></script>
+		<script src="https://apis.google.com/js/client:platform.js?onload=renderButton" async defer></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<src="https://apis.google.com/js/platform.js" async defer></script>
     </head>
 
     <body>
         <div class="container" id="container">
             <div class="form-container sign-up-container">
                 <form action="/register" method="POST">
-                    <h1>Create Account</h1>
-                    <div class="social-container">
-                        <a href="#" class="social"><i class="fa fa-facebook-f"></i></a>
-                        <a href="#" class="social"><i class="fa fa-google"></i></a>
-                    </div>
-                    <span>or use your email for registration</span>
+					<h1>Create Account</h1>
                     <input type="text" placeholder="Name" name="name" required/>
                     <input type="email" placeholder="Email" name="email" required/>
                     <input type="password" placeholder="Password" name="password" required/>
                     <button type="submit">Sign Up</button>
                 </form>
-            </div>
+			</div>
+			
             <div class="form-container sign-in-container">
+				
                 <form action="/login" method="POST">
-                    <h1>Sign in</h1>
-                    <div class="social-container">
-                        <a href="#" class="social"><i class="fa fa-facebook-f"></i></a>
-                        <a href="#" class="social"><i class="fa fa-google"></i></a>
-                    </div>
-                    <span>or use your account</span>
+					<h1>Sign in</h1>
+					<div class="social-container">
+						<div class="g-signin2" data-onsuccess="onSignIn" ></div>		
+						<div class="userContent"></div>
+					</div>
+                    <!-- <span>or use your account</span> -->
                     <input type="email" placeholder="Email" name="email" required/>
                     <input type="password" placeholder="Password" name="password" required/>
 
@@ -60,6 +62,66 @@
                 </div>
             </div>
         </div>
-        <script src="login.js"></script>
+		<script src="login.js"></script>
+		<script>
+			function onSignIn(googleUser) {
+				info = googleUser.getBasicProfile()
+				var token = googleUser.getAuthResponse().id_token
+			// 	var xhr = new XMLHttpRequest();
+			// 	var fd = new FormData()
+			// 	fd.append('name', info.getName());
+			// 	fd.append('password', token);
+			// 	fd.append('email', info.getEmail());
+			// 	fd.append('gid', info.getId());
+			// 	fd.append('guser', true);
+				
+			// 	xhr.open('POST', "/gsign", true);
+			// 	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			// 	xhr.send(fd);
+			// }
+				// xhr.open("POST", "/gsin", true)
+				// xhr.setRequestHeader("Content-Type", 'application/json')
+				// xhr.send(JSON.stringify({
+				// 	name: info.getName(),
+				// 	password: token,
+				// 	email: info.getEmail(),
+				// 	gid: info.getId()
+				// }))
+				var form = document.createElement("form");
+				var element1 = document.createElement("input"); 
+				var element2 = document.createElement("input");  
+				var element3 = document.createElement("input")
+				var element4 = document.createElement("input")
+				var element5 = document.createElement("input")
+
+				form.method = "POST";
+				form.action = "/gsign";   
+
+				element1.value=info.getName();
+				element1.name="name";
+				form.appendChild(element1);  
+
+				element2.value=token;
+				element2.name="password"
+				form.appendChild(element2);
+
+				element3.value=info.getEmail();
+				element3.name = "email"
+				form.appendChild(element3);
+
+				element4.value=true;
+				element4.name = "guser"
+				form.appendChild(element4);
+
+				element5.value=info.getId();
+				element5.name = "gid"
+				form.appendChild(element5);
+
+				form.style.visibility = 'hidden';
+				document.body.appendChild(form);
+
+				form.submit();
+				}
+		  </script>
     </body>
 </html>

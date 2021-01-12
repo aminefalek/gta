@@ -14,6 +14,9 @@ const Graph = require('./models/Graph')
 const Script = require('./models/Script')
 const app = express()
 
+const { auth } = require('google-auth-library');
+const client = auth.fromAPIKey('AIzaSyBn0XdZGYEuIBNOKAWpxy_yAJVSQGWxcrc');
+
 const dbURI = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@gta.eldo9.mongodb.net/gta?retryWrites=true&w=majority`
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
         .then((result) => app.listen(3000, () => console.log("listening at 3000")))
@@ -36,19 +39,24 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
 
+
+
 app.get('/', checkAuthenticated, (req, res) => {
     res.render('index.ejs', { name: req.user.name })
 })
 
 app.get('/login', checkNotAuthenticated, (req, res) => {
-    res.render('login.ejs')
+	res.render('login.ejs')
 })
+
 
 app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true
 }))
+
+
 
 app.post('/register', checkNotAuthenticated, async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, 10)
@@ -67,22 +75,67 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
         })
 })
 
+app.post('/gsign', checkNotAuthenticated, async (req, res) => {
+	console.log(req)
+	var user_gmail = req.body.email
+	var idToken = req.body.password; 
+	var user_name = req.body.name;
+	var user_gid = req.body.gid;
+	const res1 = await client.verifyIdToken({ idToken });
+	const { email, name, picture, sub: googleid } = res1.getPayload();
+
+	if(email == user_gmail && user_name == name && googleid == user_gid){
+		console.log('ok')
+	} else {
+		return res.redirect('/login')
+	}
+
+
+	User.findOne({email:user_gmail, name:user_name, guser: true}, (err, user) => {
+		if(user){
+			return res.redirect(307, "/login")
+		} else {
+			const user = new User({
+				name: username, 
+				email: user_gmail,
+				guser: true,
+				password: idToken
+			})
+			
+			user.save()
+				.then((result) => {
+					return res.redirect(307, '/')
+				})
+				.catch((error) => {
+					return res.redirect('/login')
+				})
+		}
+	})
+})
+
+
 app.delete('/logout', (req, res) => {
     req.logOut()
     res.redirect('/login')
 })
 
 function checkAuthenticated(req, res, next) {
+	
     if (req.isAuthenticated()) {
+		console.log("Auth")
         return next()
-    }
+	}
+	console.log("Not Auth")
     res.redirect('/login')
 }
 
 function checkNotAuthenticated(req, res, next) {
+	
     if (req.isAuthenticated()) {
+		console.log("Auth")
         return res.redirect('/')
-    }
+	}
+	console.log("Check Not Auth")
     next()
 }
 

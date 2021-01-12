@@ -5,7 +5,20 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="icon" type="image/png" href="icons/logo.svg" />
-
+		<src="https://apis.google.com/js/platform.js" async defer></script>
+		<meta name="google-signin-client_id" content="476770881781-parha044dq82dih9am4rb8ul5fou6bc9.apps.googleusercontent.com">
+		<script>
+			function onLoad() {
+				gapi.load('auth2', function() {
+					gapi.auth2.init();
+				});
+			}
+		</script>
+		<script src="https://apis.google.com/js/api.js"></script>
+		<script src="https://apis.google.com/js/client:platform.js?onload=renderButton" async defer></script>
+		<script src="https://apis.google.com/js/client:platform.js?onload=renderButton" async defer></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
         <!-- Main Stylesheet-->
         <link rel="stylesheet" href="style.css">
 
@@ -153,7 +166,7 @@
                                         </a>
                                         <ul class="dropdown-menu">
                                             <li>
-                                                <form action="/logout?_method=DELETE" method="POST" class="dropdown-item">
+                                                <form action="/logout?_method=DELETE" method="POST" class="dropdown-item" onsubmit="return glogout();">
                                                     <button type="submit" class="dropdown-item btn-sm">Logout</button>
                                                 </form>
                                             </li>
@@ -247,7 +260,14 @@
                 
             </nav>            
         </div>
-
+		<script>
+			function glogout(){
+				console.log("GLOGOUT")
+				gapi.auth2.getAuthInstance().signOut().then(function() {
+				console.log('user signed out')
+				})
+			}
+		</script>
         <script src="animation.js"></script>
         <script src="algorithms.js"></script>
         <script src="script.js"></script>
