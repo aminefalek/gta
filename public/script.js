@@ -535,25 +535,79 @@ function getNodeCoordinates(positions) {
 }
 
 async function saveGraph() {
-    const options = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            name: GRAPH_SAVE_UI.value,
-            graph: graph,
-            layout: getNodePositions(),
-        }),
-    };
-    GRAPH_SAVE_UI.value = "";
+    var name = GRAPH_SAVE_UI.value.trim();
+    var error = false;
 
-    await fetch("/save-graph", options).then((response) => {
-        loadGraphNames();
-    });
+    if (Object.keys(graph).length === 0) {
+        error = true;
+        GRAPH_INPUT_FEEDBACK.innerHTML = EMPTY_GRAPH_ERROR;
+    } else if (name.length == 0) {
+        error = true;
+        GRAPH_INPUT_FEEDBACK.innerHTML = EMPTY_GRAPH_NAME_ERROR;
+    }
+
+    if (error) {
+        GRAPH_SAVE_UI.classList.add("is-invalid");
+        setTimeout(() => {
+            GRAPH_SAVE_UI.classList.remove("is-invalid");
+        }, 5000);
+    } else {
+        GRAPH_SAVE_UI.classList.remove("is-invalid");
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: GRAPH_SAVE_UI.value,
+                graph: graph,
+                layout: getNodePositions(),
+            }),
+        };
+        GRAPH_SAVE_UI.value = "";
+
+        await fetch("/save-graph", options).then((response) => {
+            loadGraphNames();
+        });
+    }
 }
 
 async function loadGraph() {
+    var error = false;
+    if (
+        GRAPH_DROPDOWN_UI.length === 0 ||
+        !GRAPH_DROPDOWN_UI.options[GRAPH_DROPDOWN_UI.selectedIndex]
+    ) {
+        error = true;
+        GRAPH_LOAD_FEEDBACK.innerHTML = INVALID_GRAPH_SELECT_ERROR;
+    }
+
+    if (error) {
+        GRAPH_DROPDOWN_UI.classList.add("is-invalid");
+        setTimeout(() => {
+            GRAPH_DROPDOWN_UI.classList.remove("is-invalid");
+        }, 5000);
+    } else {
+        GRAPH_DROPDOWN_UI.classList.remove("is-invalid");
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name:
+                    GRAPH_DROPDOWN_UI.options[GRAPH_DROPDOWN_UI.selectedIndex]
+                        .text,
+            }),
+        };
+        const response = await fetch("/load-graph", options);
+        data = await response.json();
+        graph = data["graph"];
+        drawGraph(data["layout"]);
+    }
+}
+
+async function deleteGraph() {
     const options = {
         method: "POST",
         headers: {
@@ -564,10 +618,9 @@ async function loadGraph() {
                 GRAPH_DROPDOWN_UI.options[GRAPH_DROPDOWN_UI.selectedIndex].text,
         }),
     };
-    const response = await fetch("/load-graph", options);
+    const response = await fetch("/delete-graph", options);
     data = await response.json();
-    graph = data["graph"];
-    drawGraph(data["layout"]);
+    loadGraphNames();
 }
 
 async function loadGraphNames() {
@@ -904,6 +957,12 @@ document.addEventListener("DOMContentLoaded", function () {
         resizable(ele);
     });
 });
+
+const GRAPH_INPUT_FEEDBACK = document.getElementById("graph-name-feedback");
+const GRAPH_LOAD_FEEDBACK = document.getElementById("graph-load-feedback");
+const EMPTY_GRAPH_ERROR = "draw a graph.";
+const EMPTY_GRAPH_NAME_ERROR = "write a valid graph name.";
+const INVALID_GRAPH_SELECT_ERROR = "invalid graph selection.";
 
 initializeWeightInputUI();
 loadGraphNames();

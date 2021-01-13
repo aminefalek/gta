@@ -173,21 +173,25 @@
                         
                         <div class="btn-group btn-group-sm" role="group">
                             <input type="radio" class="btn-check" name="code-learn" id="code-button" checked>
-                            <label class="btn btn-outline-primary" for="code-button">code</label>
+                            <label class="btn btn-outline-primary shadow-none" for="code-button">code</label>
                             
                             <input type="radio" class="btn-check" name="code-learn" id="learn-button">
-                            <label class="btn btn-outline-primary" for="learn-button">learn</label>
+                            <label class="btn btn-outline-primary shadow-none" for="learn-button">learn</label>
                         </div>
 
                         <div id="graphs" class="input-group input-group-sm">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Graph</span>
                             <select id="graphs-select" class="form-select form-select-sm">
-                                <option selected></option>
                             </select>
+                            <button class="btn btn-outline-danger btn-sm" type="button" id="delete-graph"><i class="fa fa-trash" onclick="deleteGraph()"></i></button>
+                            <div id="graph-load-feedback" class="invalid-feedback">
+                            </div>
                         </div>
 
                         <div id="save-graph" class="input-group input-group-sm">
                             <input id="save-graph-input" class="form-control form-control-sm" type="text" placeholder="graph-name">
+                            <div id="graph-name-feedback" class="invalid-feedback">
+                            </div>
                         </div>
 
                         <div id="edit-mode" class="form-check" data-bs-toggle="collapse" data-bs-target="#collapse" aria-expanded="false">
