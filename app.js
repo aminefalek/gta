@@ -2,6 +2,10 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
+const { auth } = require('google-auth-library');
+const client = auth.fromAPIKey('AIzaSyBn0XdZGYEuIBNOKAWpxy_yAJVSQGWxcrc');
+
+
 const express = require('express')
 const bcrypt = require('bcrypt')
 const passport = require('passport')
@@ -13,9 +17,6 @@ const User = require('./models/User')
 const Graph = require('./models/Graph')
 const Script = require('./models/Script')
 const app = express()
-
-const { auth } = require('google-auth-library');
-const client = auth.fromAPIKey('AIzaSyBn0XdZGYEuIBNOKAWpxy_yAJVSQGWxcrc');
 
 const dbURI = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@gta.eldo9.mongodb.net/gta?retryWrites=true&w=majority`
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
