@@ -10,7 +10,6 @@ function initialize(passport) {
     const authenticateUser = async (req, email, password, done) => {
 		 // Match user
 		 console.log('in auth')
-		// eturn done(null,user)
         user = await User.findOne({ email: email, guser: req.body.guser })
             // .then(user => {
 		if (!user) {
@@ -42,7 +41,6 @@ function initialize(passport) {
 				return done(null, false, { message: 'Password incorrect' });
 			}
 		})
-	// )
     }
     passport.use(new localStrategy({ usernameField: 'email', passReqToCallback: true }, authenticateUser))
     passport.serializeUser((user, done) => done(null, user.id))
