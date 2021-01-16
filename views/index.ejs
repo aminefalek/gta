@@ -36,6 +36,9 @@
         <script src="https://unpkg.com/lodash@4.17.4"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>
         <script src="https://unpkg.com/cytoscape-edgehandles/cytoscape-edgehandles.js"></script>
+        <script src="https://unpkg.com/layout-base/layout-base.js"></script>
+        <script src="https://unpkg.com/cose-base/cose-base.js"></script>
+        <script src="https://unpkg.com/cytoscape-fcose/cytoscape-fcose.js"></script>
 
         <script src="https://unpkg.com/popper.js@1.14.7/dist/umd/popper.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/cytoscape-popper@1.0.4/cytoscape-popper.min.js"></script>
@@ -203,17 +206,17 @@
                                 <table class="table table-sm">
                                     <thead class="table-light">
                                         <tr>
-                                            <th class="col-md-2 align-middle">size</th>
+                                            <th class="col-md-2">size</th>
                                             <th class="col-md-2">density</th>
                                             <th class="col-md-4" colspan="2">edge weight</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><input id="graph-size-input" type="number" placeholder="[2, 50]"></td>
-                                            <td><input id="graph-density-input" type="number" placeholder="[0,1]"></td>
-                                            <td><input id="graph-min-weight-input" type="number" placeholder="min"></td>
-                                            <td><input id="graph-max-weight-input" type="number" placeholder="max"></td>
+                                            <td><input id="graph-size-input" type="number" placeholder="[2, 50]" value="4"></td>
+                                            <td><input id="graph-density-input" type="number" placeholder="[0,1]" value="0.3"></td>
+                                            <td><input id="graph-min-weight-input" type="number" placeholder="min" value="1"></td>
+                                            <td><input id="graph-max-weight-input" type="number" placeholder="max" value="5"></td>
                                         </tr>
                                         <tr>
                                             <td></td>

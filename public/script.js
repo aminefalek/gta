@@ -74,7 +74,9 @@ const LAYOUT = {
 };
 
 const LAYOUT_GRID = {
-    name: "grid",
+    name: "fcose",
+    animate: false,
+    idealEdgeLength: 200,
 };
 
 function initialize() {
